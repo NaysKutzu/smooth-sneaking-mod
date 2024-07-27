@@ -128,6 +128,9 @@ tasks.jar {
 }
 
 tasks.shadowJar {
+    dependencies {
+        exclude(dependency("org.spongepowered:mixin:.*"))
+    }
     destinationDirectory.set(layout.buildDirectory.dir("intermediates"))
     archiveClassifier.set("non-obfuscated-with-deps")
     configurations = listOf(shadowImpl)
@@ -142,4 +145,3 @@ tasks.shadowJar {
 }
 
 tasks.assemble.get().dependsOn(tasks.remapJar)
-
