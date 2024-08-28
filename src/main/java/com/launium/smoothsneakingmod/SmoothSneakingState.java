@@ -5,10 +5,15 @@ import org.lwjgl.Sys;
 public class SmoothSneakingState {
     private boolean lastState;
     private boolean isAnimationDone;
-    private long lastOperationTime;
+    private float lastOperationTime;
     private float lastX;
 
-    private static float getY(float x) {
+    private static float getUpY(float x) {
+        // quadratic function
+        return -0.08F * x * x;
+    }
+
+    private static float getDownY(float x) {
         // quadratic function
         x--;
         return 0.08F * x * x - 0.08F;
@@ -23,30 +28,30 @@ public class SmoothSneakingState {
             lastState = isSneaking;
             isAnimationDone = false;
         }
-        long now = Sys.getTime();
+        float now = ((float) (Sys.getTime() << 3)) / Sys.getTimerResolution();
         float timeDiff = now - lastOperationTime;
         if (lastOperationTime == 0F) timeDiff = 0F;
         lastOperationTime = now;
         if (isSneaking) {
             if (lastX < 1F) {
-                lastX += (timeDiff / 150F);
+                lastX += timeDiff;
                 if (lastX > 1F) lastX = 1F;
-                return getY(lastX);
+                return getDownY(lastX);
             } else {
                 lastX = 1F;
                 isAnimationDone = true;
-                lastOperationTime=0L;
+                lastOperationTime = 0F;
                 return -0.08F;
             }
         } else {
             if (lastX > 0) {
-                lastX -= (timeDiff / 150F);
+                lastX -= timeDiff;
                 if (lastX < 0F) lastX = 0F;
-                return getY(lastX);
+                return getUpY(lastX);
             } else {
                 lastX = 0F;
                 isAnimationDone = true;
-                lastOperationTime=0L;
+                lastOperationTime = 0F;
                 return 0F;
             }
         }
