@@ -1,4 +1,4 @@
-package com.launium.smoothsneakingmod;
+package xyz.nayskutzu.mythicalclient;
 
 import org.lwjgl.Sys;
 

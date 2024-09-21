@@ -23,4 +23,4 @@ plugins {
 }
 
 
-rootProject.name = "smooth-sneaking-mod"
+rootProject.name = "mythicalclient"

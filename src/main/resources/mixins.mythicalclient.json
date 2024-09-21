@@ -1,6 +1,6 @@
 {
-  "package": "${basePackage}.mixin",
-  "refmap": "mixins.${modid}.refmap.json",
+  "package": "xyz.nayskutzu.mythicalclient.mixin",
+  "refmap": "mixins.mythicalclient.refmap.json",
   "minVersion": "0.7",
   "compatibilityLevel": "JAVA_8",
   "client": [

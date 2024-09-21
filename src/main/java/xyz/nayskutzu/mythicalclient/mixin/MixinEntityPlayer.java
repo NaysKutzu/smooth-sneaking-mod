@@ -1,8 +1,9 @@
-package com.launium.smoothsneakingmod.mixin;
+package xyz.nayskutzu.mythicalclient.mixin;
 
-import com.launium.smoothsneakingmod.SmoothSneakingState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import xyz.nayskutzu.mythicalclient.SmoothSneakingState;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
