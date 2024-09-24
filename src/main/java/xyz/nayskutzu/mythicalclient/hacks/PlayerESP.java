@@ -1,4 +1,4 @@
-package xyz.nayskutzu.mythicalclient.ui;
+package xyz.nayskutzu.mythicalclient.hacks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
 import org.lwjgl.opengl.GL11;
 
 public class PlayerESP {
@@ -15,12 +16,15 @@ public class PlayerESP {
     private static final PlayerESP instance = new PlayerESP();
 
     public static void main() {
+        System.out.println("PlayerESP class booting up...");
         if (enabled) {
             enabled = false;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(instance);
+
         } else {
             enabled = true;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(instance);
+
         }
     }
 
@@ -68,28 +72,11 @@ public class PlayerESP {
         GlStateManager.popMatrix();
     }
 
+    /**
+     * @deprecated This method is not used
+     */
     private void drawTracer(double x, double y, double z) {
-        GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.disableDepth();
-        GlStateManager.disableLighting();
-        GlStateManager.disableCull();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(0.0F, 1.0F, 0.0F, 0.5F);
-        GL11.glLineWidth(3.0F);
-
-        GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(0, mc.thePlayer.getEyeHeight(), 0); // Start at the player's eye height
-        GL11.glVertex3d(x, y + mc.thePlayer.getEyeHeight(), z); // End at the other player's position
-        GL11.glEnd();
-
-        GlStateManager.enableCull();
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        // REMOVE THIS METHOD
     }
 
     private void drawBoundingBox(AxisAlignedBB box) {

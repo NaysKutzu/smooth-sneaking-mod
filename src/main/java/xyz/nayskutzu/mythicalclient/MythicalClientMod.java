@@ -7,11 +7,20 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
+import xyz.nayskutzu.mythicalclient.hacks.IModList;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
+import xyz.nayskutzu.mythicalclient.v2.WebServer;
 import net.minecraftforge.fml.common.Loader;
 
 import net.minecraft.client.settings.KeyBinding;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,19 +36,77 @@ public class MythicalClientMod {
     public static KeyBinding KeyBindSafewalk;
     private static Config config;
     private boolean toggled = false;
+    public static int port;
+    private static final Minecraft mc = Minecraft.getMinecraft();
+    public static MemoryStorageDriveData data = new MemoryStorageDriveData();
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         config.updateConfig(event.getSuggestedConfigurationFile(), true);
-        System.out.println("Loaded config");
+        port = 9865;
+
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        try {
+            while (isPortInUse(port)) {
+                port++;
+            }
+            WebServer webServer = new WebServer(port);
+            webServer.start();
+            while (!webServer.wasStarted()) {
+                LOGGER.info("Web server is starting...");
+                Thread.sleep(1000);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        LOGGER.info("Web server started on port " + port);
+
         LOGGER.info("MythicalClient is initialized");
         WindowState.updateTitle("MythicalClient | ChillLoader (1.8.9)");
         WindowState.UpdateIcon();
         MythicalClientMenu.main();
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        try {
+            scheduler.schedule(() -> {
+
+                try {
+                    while (mc.thePlayer == null) {
+                        try {
+                            Thread.sleep(1000); // Wait for 1 second before checking again
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    MythicalClientMod.data.put("name", mc.thePlayer.getName());
+                    MythicalClientMod.data.put("uuid", mc.thePlayer.getUniqueID().toString());
+                    MythicalClientMod.data.put("version", "1.8.9");
+                    try {
+                        java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:" + port));
+                        MythicalClientMenu.frame.setVisible(false);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    MythicalClientMod.data.put("name", "Unknown");
+                    e.printStackTrace();
+                }
+            }, 15, TimeUnit.SECONDS); // Adjust the delay as needed
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        IModList.addMod("BridgeHack");
+        IModList.addMod("NukeProcess");
+        IModList.addMod("PlayerESP");
+        IModList.addMod("Tracers");
+
     }
 
     public void sendHelp() {
@@ -97,6 +164,23 @@ public class MythicalClientMod {
 
     static {
         config = Config.instance;
+        data = new MemoryStorageDriveData();
+    }
+
+    /**
+     * Check if a port is in use
+     * 
+     * @param port The port to check
+     * 
+     * @return boolean
+     */
+    public static boolean isPortInUse(int port) {
+        try {
+            (new java.net.ServerSocket(port)).close();
+            return false;
+        } catch (java.io.IOException e) {
+            return true;
+        }
     }
 
 }

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hack Client</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
+" rel="stylesheet">
+
+    <style>
+        .category {
+            background-color: #2d3748;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .category h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .category button {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .category button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white">
+    <br> <br>
+    <br>
+
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-7xl">
+            <h1 class="text-3xl font-bold mb-6 text-center">MythicalClient %version% (%player_name%)</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div class="category">
+                <h2 class="text-2xl font-semibold mb-4">Render</h2>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">PlayerESP</h3>
+                        <button onclick="playerESP();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
+                    </div>
+                    <br>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Tracer</h3>
+                        <button onclick="Tracers();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
+                    </div>
+                    <br>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">ChestESP</h3>
+                        <button onclick="ChestEsp();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="category">
+                <h2 class="text-2xl font-semibold mb-4">Movement</h2>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">SafeWalk</h3>
+                        <button onclick="safeWalk();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Activate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="category">
+                <h2 class="text-2xl font-semibold mb-4">Communication</h2>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Send Chat Message</h3>
+                        <form action="/sendchat" method="get">
+                            <input type="text" placeholder="Enter message" name="postData" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-700 text-white">
+                            <button
+                                class="w-full mt-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="category">
+                <h2 class="text-2xl font-semibold mb-4">Destruction</h2>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Nuke</h3>
+                        <button onclick="nuke();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">Activate</button>
+                    </div>
+                    <br>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Kill Game</h3>
+                        <button onclick="killGame();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">Activate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="category">
+                <h2 class="text-2xl font-semibold mb-4">Miscellaneous</h2>
+                <div class="space-y-4">
+                    <div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Force OP (Protocol LIB)</h3>
+                            <button onclick="forceop();"
+                                class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Activate</button>
+                        </div>
+                        <br>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Execute</h3>
+                            <button onclick="runJavaCode();"
+                                class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Execute</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br> <br>
+    <br>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
+
+<script>
+    window.onload = function () {
+        const colors = [
+            'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500',
+            'bg-green-600 hover:bg-green-700 focus:ring-green-500',
+            'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500',
+            'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500',
+            'bg-pink-600 hover:bg-pink-700 focus:ring-pink-500',
+            'bg-red-600 hover:bg-red-700 focus:ring-red-500',
+            'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
+        ];
+
+        try {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach((button, index) => {
+                const colorClass = colors[index % colors.length];
+                button.className = button.className.replace(/bg-\w+-600 hover:bg-\w+-700 focus:ring-\w+-500/g, colorClass);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+    function playerESP() {
+        axios.post('/toggle', {
+            mod: 'PlayerESP'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'PlayerESP',
+                    text: 'PlayerESP has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling PlayerESP.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
+
+    function safeWalk() {
+        axios.post('/toggle', {
+            mod: 'BridgeHack'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'SafeWalk',
+                    text: 'SafeWalk has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling SafeWalk.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
+    function Tracers() {
+        axios.post('/toggle', {
+            mod: 'Tracers'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'Tracers',
+                    text: 'Tracers has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling Tracers.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
+    function nuke() {
+        axios.post('/toggle', {
+            mod: 'NukeProcess'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'Nuke',
+                    text: 'Nuke has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling Nuke.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
+
+    function killGame() {
+        axios.post('/toggle', {
+            mod: 'KillGame'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'Kill Game',
+                    text: 'Kill Game has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling Kill Game.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
+
+    function forceop() {
+        axios.post('/toggle', {
+            mod: 'ForceOP'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'Force OP',
+                    text: 'Force OP has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling Force OP.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
+    function ChestEsp() {
+        axios.post('/toggle', {
+            mod: 'ChestESP'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'ChestESP',
+                    text: 'ChestESP has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling ChestESP.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
+    function runJavaCode() {
+        Swal.fire({
+            title: 'Enter Java Code',
+            input: 'textarea',
+            inputAttributes: {
+                'aria-label': 'Type your Java code here'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Run',
+            preConfirm: (code) => {
+                return code;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.post('/run', {
+                    code: result.value
+                })
+                    .then(response => {
+                        Swal.fire({
+                            title: 'Java Code',
+                            text: 'Java code has been executed!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while executing Java code.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        console.error(error);
+                    });
+            }
+        });
+
+    }
+    
+    function checkLicense() {
+        Swal.fire({
+            title: 'Checking License',
+            text: 'Please wait...',
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        }).then(() => {
+            Swal.fire({
+                title: 'License Valid',
+                text: 'Your license is valid!',
+                icon: 'success',
+                timer: 500,
+                showConfirmButton: false
+            });
+        });
+    }
+    checkLicense();
+</script>
+
+</html>

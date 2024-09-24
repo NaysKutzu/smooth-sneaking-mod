@@ -1,4 +1,4 @@
-package xyz.nayskutzu.mythicalclient.ui;
+package xyz.nayskutzu.mythicalclient.hacks;
 
 import javax.swing.JOptionPane;
 
