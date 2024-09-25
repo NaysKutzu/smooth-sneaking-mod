@@ -11,7 +11,7 @@ import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
 import xyz.nayskutzu.mythicalclient.event.BlockChatWords;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
-import xyz.nayskutzu.mythicalclient.utils.DiscordRPCUtil;
+//import xyz.nayskutzu.mythicalclient.utils.DiscordRPCUtil;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
 import net.minecraftforge.fml.common.Loader;
 
@@ -45,7 +45,7 @@ public class MythicalClientMod {
     public void onPreInit(FMLPreInitializationEvent event) {
         config.updateConfig(event.getSuggestedConfigurationFile(), true);
         port = 9865;
-        DiscordRPCUtil.update("MythicalClient", "In the main menu!", "", "");
+        //DiscordRPCUtil.update("MythicalClient", "In the main menu!", "", "");
     }
 
     @Mod.EventHandler
@@ -129,10 +129,12 @@ public class MythicalClientMod {
         config.saveConfig();
     }
 
-    public static void sendMessageToChat(String message) {
+    public static void sendMessageToChat(String message, boolean raw) {
         String playerName = net.minecraft.client.Minecraft.getMinecraft().thePlayer.getName();
         String formattedMessage = message.replace("%player%", playerName);
-        formattedMessage = "&7[&5&lMythical&d&lClient&7] ➡ " + formattedMessage;
+        if (!raw) {
+            formattedMessage = "&7[&5&lMythical&d&lClient&7] ➡ " + formattedMessage;
+        }
         net.minecraft.client.Minecraft.getMinecraft().thePlayer.addChatMessage(new net.minecraft.util.ChatComponentText(
                 ChatColor.translateAlternateColorCodes('&', formattedMessage)));
     }

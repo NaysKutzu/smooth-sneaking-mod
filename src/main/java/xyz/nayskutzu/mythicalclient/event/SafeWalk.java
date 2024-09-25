@@ -51,7 +51,7 @@ public class SafeWalk {
 
                 @Override
                 public void onTick() {
-                    MythicalClientMod.sendMessageToChat("Toggled sneak is installed please uninstall to use safewalk!");
+                    MythicalClientMod.sendMessageToChat("Toggled sneak is installed please uninstall to use safewalk!",false);
                 }
             };
         }

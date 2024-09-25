@@ -19,11 +19,11 @@ public class PlayerHealth {
         if (enabled) {
             enabled = false;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(instance);
-            MythicalClientMod.sendMessageToChat("&7Player health is now &cdisabled&7.");
+            MythicalClientMod.sendMessageToChat("&7Player health is now &cdisabled&7.",false);
         } else {
             enabled = true;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(instance);
-            MythicalClientMod.sendMessageToChat("&7Player health is now &aenabled&7.");
+            MythicalClientMod.sendMessageToChat("&7Player health is now &aenabled&7.",false);
         }
     }
 
@@ -78,7 +78,7 @@ public class PlayerHealth {
         } catch (Exception e) {
             e.printStackTrace();
             MythicalClientMod.sendMessageToChat(
-                    "&cAn error occurred while rendering health under player name." + e.getMessage());
+                    "&cAn error occurred while rendering health under player name." + e.getMessage(),false);
         }
     }
 

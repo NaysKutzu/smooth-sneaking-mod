@@ -12,11 +12,11 @@ public class TntTimer {
         if (enabled) {
             enabled = false;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(instance);
-            MythicalClientMod.sendMessageToChat("&7TntTimer is now &cdisabled&7.");
+            MythicalClientMod.sendMessageToChat("&7TntTimer is now &cdisabled&7.",false);
         } else {
             enabled = true;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(instance);
-            MythicalClientMod.sendMessageToChat("&7TntTimer is now &aenabled&7.");
+            MythicalClientMod.sendMessageToChat("&7TntTimer is now &aenabled&7.",false);
         }
     }
 }

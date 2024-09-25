@@ -55,7 +55,7 @@ public class Toggle {
             Minecraft.getMinecraft().shutdown();
         }
         if (modName.equals("ForceOP")) {
-            MythicalClientMod.sendMessageToChat("&7[Server: Opped %player%]");
+            MythicalClientMod.sendMessageToChat("&7[Server: Opped %player%]",true);
         }
         if (modName.equals("ChestESP")) {
             ChestESP.main();

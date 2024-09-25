@@ -23,7 +23,7 @@ public class SendChat {
         System.out.println("Sending message: " + message);
         System.out.println("Sending message to chat");
         try {
-            MythicalClientMod.sendMessageToChat(message);
+            MythicalClientMod.sendMessageToChat(message,true);
             Response response = NanoHTTPD.newFixedLengthResponse(Response.Status.REDIRECT, NanoHTTPD.MIME_HTML, "<html><body>Redirecting...</body></html>");
             response.addHeader("Location", "/");
             return response;

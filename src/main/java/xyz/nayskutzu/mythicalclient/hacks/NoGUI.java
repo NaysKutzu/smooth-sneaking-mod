@@ -16,13 +16,13 @@ public class NoGUI {
             enabled = false;
             System.out.println("NoGUI class disabled.");
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(instance);
-            MythicalClientMod.sendMessageToChat("&7NoGUI is now &cdisabled&7.");
+            MythicalClientMod.sendMessageToChat("&7NoGUI is now &cdisabled&7.",false);
 
         } else {
             enabled = true;
             System.out.println("NoGUI class enabled.");
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(instance);
-            MythicalClientMod.sendMessageToChat("&7NoGUI is now &aenabled&7.");
+            MythicalClientMod.sendMessageToChat("&7NoGUI is now &aenabled&7.",false);
         }
     }
 
@@ -38,7 +38,7 @@ public class NoGUI {
             } catch (AWTException e) {
                 e.printStackTrace();
             }
-            MythicalClientMod.sendMessageToChat("&7A GUI was &cclosed&7 because NoGUI is enabled.");
+            MythicalClientMod.sendMessageToChat("&7A GUI was &cclosed&7 because NoGUI is enabled.",false);
         }
     }
 

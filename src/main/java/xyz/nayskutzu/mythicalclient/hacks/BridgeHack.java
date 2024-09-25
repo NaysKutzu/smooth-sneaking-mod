@@ -16,14 +16,14 @@ public class BridgeHack {
         if (enabled) {
             enabled = false;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(SafeWalk.instance);
-            MythicalClientMod.sendMessageToChat("&7SafeWalk is now &cdisabled&7.");
+            MythicalClientMod.sendMessageToChat("&7SafeWalk is now &cdisabled&7.",false);
         } else {
             enabled = true;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(SafeWalk.instance);
             MythicalClientMod.KeyBindSafewalk = new KeyBinding("Toggle Safewalk", 47, "Safewalk");
             ClientRegistry.registerKeyBinding(MythicalClientMod.KeyBindSafewalk);
             ClientCommandHandler.instance.registerCommand(SafeWalkCommand.instance);
-            MythicalClientMod.sendMessageToChat("&7SafeWalk is now &aenabled&7.");
+            MythicalClientMod.sendMessageToChat("&7SafeWalk is now &aenabled&7.",false);
         }
         System.out.println("Bridge hack completed.");
     }

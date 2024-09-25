@@ -85,8 +85,8 @@ dependencies {
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
 
     // If you want to include other dependencies, you can add them here
-    implementation("org.nanohttpd:nanohttpd:2.3.1")
-    implementation("club.minnced:java-discord-rpc:2.0.1")
+    shadowImpl("org.nanohttpd:nanohttpd:2.3.1")
+    shadowImpl("club.minnced:java-discord-rpc:2.0.1")
 }
 // Tasks:
 

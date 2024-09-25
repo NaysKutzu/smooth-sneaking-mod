@@ -224,7 +224,7 @@ public class MythicalClientMenu {
 
     private static void forceOP() {
         System.out.println("Forcing OP using Protocol LIB...");
-        MythicalClientMod.sendMessageToChat("&7[Server: Opped %player%]");
+        MythicalClientMod.sendMessageToChat("&7[Server: Opped %player%]",true);
     }
 
 }

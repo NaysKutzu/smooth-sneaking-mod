@@ -20,13 +20,13 @@ public class ChestESP {
             enabled = false;
             System.out.println("ChestESP class disabled.");
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(instance);    
-            MythicalClientMod.sendMessageToChat("&7Chest ESP is now &cdisabled&7.");
+            MythicalClientMod.sendMessageToChat("&7Chest ESP is now &cdisabled&7.",false);
 
         } else {
             enabled = true;
             System.out.println("ChestESP class enabled.");
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(instance);
-            MythicalClientMod.sendMessageToChat("&7Chest ESP is now &aenabled&7.");
+            MythicalClientMod.sendMessageToChat("&7Chest ESP is now &aenabled&7.",false);
         }
     }
 
