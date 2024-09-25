@@ -8,9 +8,10 @@ import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
-import xyz.nayskutzu.mythicalclient.hacks.IModList;
+import xyz.nayskutzu.mythicalclient.event.BlockChatWords;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
+import xyz.nayskutzu.mythicalclient.utils.DiscordRPCUtil;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
 import net.minecraftforge.fml.common.Loader;
 
@@ -44,7 +45,7 @@ public class MythicalClientMod {
     public void onPreInit(FMLPreInitializationEvent event) {
         config.updateConfig(event.getSuggestedConfigurationFile(), true);
         port = 9865;
-
+        DiscordRPCUtil.update("MythicalClient", "In the main menu!", "", "");
     }
 
     @Mod.EventHandler
@@ -70,8 +71,9 @@ public class MythicalClientMod {
         WindowState.updateTitle("MythicalClient | ChillLoader (1.8.9)");
         WindowState.UpdateIcon();
         MythicalClientMenu.main();
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(BlockChatWords.instance);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
+        
         try {
             scheduler.schedule(() -> {
 
@@ -98,14 +100,10 @@ public class MythicalClientMod {
                     MythicalClientMod.data.put("name", "Unknown");
                     e.printStackTrace();
                 }
-            }, 15, TimeUnit.SECONDS); // Adjust the delay as needed
+            }, 3, TimeUnit.SECONDS); // Adjust the delay as needed
         } catch (Exception e) {
             e.printStackTrace();
         }
-        IModList.addMod("BridgeHack");
-        IModList.addMod("NukeProcess");
-        IModList.addMod("PlayerESP");
-        IModList.addMod("Tracers");
 
     }
 
@@ -134,6 +132,7 @@ public class MythicalClientMod {
     public static void sendMessageToChat(String message) {
         String playerName = net.minecraft.client.Minecraft.getMinecraft().thePlayer.getName();
         String formattedMessage = message.replace("%player%", playerName);
+        formattedMessage = "&7[&5&lMythical&d&lClient&7] ➡ " + formattedMessage;
         net.minecraft.client.Minecraft.getMinecraft().thePlayer.addChatMessage(new net.minecraft.util.ChatComponentText(
                 ChatColor.translateAlternateColorCodes('&', formattedMessage)));
     }
@@ -145,8 +144,8 @@ public class MythicalClientMod {
     }
 
     public void sendToggle(String name, String good, String bad, boolean isGood) {
-        this.sendChat(ChatFormatting.RESET + "[" + ChatFormatting.LIGHT_PURPLE + name + ChatFormatting.RESET + "]"
-                + ChatFormatting.YELLOW + " toggled "
+        this.sendChat(ChatFormatting.GRAY + "[" + ChatFormatting.DARK_PURPLE + name + ChatFormatting.GRAY + "]"
+                + ChatFormatting.WHITE + " toggled "
                 + (isGood ? ChatFormatting.GREEN + good : ChatFormatting.RED + bad));
     }
 

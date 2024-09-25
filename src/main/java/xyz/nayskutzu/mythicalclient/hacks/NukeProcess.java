@@ -9,6 +9,7 @@ public class NukeProcess {
             System.out.println("Nuke process started...");
             // Nuke process code here
             MythicalClientMenu.frame.dispose(); 
+            
             if (PlayerESP.enabled) {
                 PlayerESP.main();
             }

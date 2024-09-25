@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import xyz.nayskutzu.mythicalclient.MythicalClientMod;
 
 public class ChestESP {
     public static boolean enabled;
@@ -18,12 +19,14 @@ public class ChestESP {
         if (enabled) {
             enabled = false;
             System.out.println("ChestESP class disabled.");
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(instance);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.unregister(instance);    
+            MythicalClientMod.sendMessageToChat("&7Chest ESP is now &cdisabled&7.");
 
         } else {
             enabled = true;
             System.out.println("ChestESP class enabled.");
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(instance);
+            MythicalClientMod.sendMessageToChat("&7Chest ESP is now &aenabled&7.");
         }
     }
 

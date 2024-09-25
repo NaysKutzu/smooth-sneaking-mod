@@ -14,7 +14,7 @@ import net.minecraft.client.Minecraft;
 import xyz.nayskutzu.mythicalclient.hacks.BridgeHack;
 import xyz.nayskutzu.mythicalclient.hacks.NukeProcess;
 import xyz.nayskutzu.mythicalclient.hacks.PlayerESP;
-import xyz.nayskutzu.mythicalclient.hacks.SendMessageInGame;
+//import xyz.nayskutzu.mythicalclient.hacks.SendMessageInGame;
 
 import java.awt.*;
 import java.io.File;
@@ -145,7 +145,7 @@ public class MythicalClientMenu {
             ((JButton) buttonPanel.getComponent(0)).addActionListener(e -> MythicalClientMenu.forceOP());
             ((JButton) buttonPanel.getComponent(1)).addActionListener(e -> PlayerESP.main());
             ((JButton) buttonPanel.getComponent(2)).addActionListener(e -> BridgeHack.main());
-            ((JButton) buttonPanel.getComponent(3)).addActionListener(e -> SendMessageInGame.main());
+            //((JButton) buttonPanel.getComponent(3)).addActionListener(e -> SendMessageInGame.main());
             ((JButton) buttonPanel.getComponent(4)).addActionListener(e -> NukeProcess.main());
             ((JButton) buttonPanel.getComponent(5)).addActionListener(e -> Minecraft.getMinecraft().shutdown());
             ((JButton) buttonPanel.getComponent(6)).addActionListener(e -> {

@@ -9,8 +9,11 @@ import net.minecraft.client.Minecraft;
 import xyz.nayskutzu.mythicalclient.MythicalClientMod;
 import xyz.nayskutzu.mythicalclient.hacks.BridgeHack;
 import xyz.nayskutzu.mythicalclient.hacks.ChestESP;
+import xyz.nayskutzu.mythicalclient.hacks.NoGUI;
 import xyz.nayskutzu.mythicalclient.hacks.NukeProcess;
 import xyz.nayskutzu.mythicalclient.hacks.PlayerESP;
+import xyz.nayskutzu.mythicalclient.hacks.PlayerHealth;
+import xyz.nayskutzu.mythicalclient.hacks.TntTimer;
 import xyz.nayskutzu.mythicalclient.hacks.Tracers;
 import xyz.nayskutzu.mythicalclient.v2.api.IResponse;
 
@@ -56,6 +59,15 @@ public class Toggle {
         }
         if (modName.equals("ChestESP")) {
             ChestESP.main();
+        }
+        if (modName.equals("PlayerHealth")) {
+            PlayerHealth.main();
+        }
+        if (modName.equals("TntTimer")) {
+            TntTimer.main();   
+        }
+        if (modName.equals("NoGUI")) {
+            NoGUI.main();
         }
         return IResponse.OK("Updated", null);
     }

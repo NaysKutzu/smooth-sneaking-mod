@@ -60,6 +60,18 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                         <button onclick="ChestEsp();"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
                     </div>
+                    <br>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">PlayerHealth</h3>
+                        <button onclick="PlayerHealth();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
+                    </div>  
+                    <br>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">TntTimer</h3>
+                        <button onclick="TntTimer();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
+                    </div>
                 </div>
             </div>
             <div class="category">
@@ -71,6 +83,14 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Activate</button>
                     </div>
                 </div>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">NoGUI</h3>
+                        <button onclick="NoGUI();"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Activate</button>
+                    </div>
+                </div>
+                
             </div>
             <div class="category">
                 <h2 class="text-2xl font-semibold mb-4">Communication</h2>
@@ -245,7 +265,29 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                 console.error(error);
             });
     }
-
+    function PlayerHealth() {
+        axios.post('/toggle', {
+            mod: 'PlayerHealth'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'PlayerHealth',
+                    text: 'PlayerHealth has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling PlayerHealth.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
     function killGame() {
         axios.post('/toggle', {
             mod: 'KillGame'
@@ -355,6 +397,29 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
         });
 
     }
+    function NoGUI() {
+        axios.post('/toggle', {
+            mod: 'NoGUI'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'NoGUI',
+                    text: 'NoGUI has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling NoGUI.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
+    }
     
     function checkLicense() {
         Swal.fire({
@@ -374,6 +439,30 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                 showConfirmButton: false
             });
         });
+    }
+
+    function TntTimer() {
+        axios.post('/toggle', {
+            mod: 'TntTimer'
+        })
+            .then(response => {
+                Swal.fire({
+                    title: 'TntTimer',
+                    text: 'TntTimer has been toggled!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                console.log(response.data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while toggling TntTimer.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error);
+            });
     }
     checkLicense();
 </script>

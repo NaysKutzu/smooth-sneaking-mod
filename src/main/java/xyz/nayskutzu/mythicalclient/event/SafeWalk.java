@@ -20,33 +20,26 @@ public class SafeWalk {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (MythicalClientMod.KeyBindSafewalk.isPressed()) { // func_151470_d() -> isPressed()
+        if (MythicalClientMod.KeyBindSafewalk.isPressed()) {
             this.safewalk.toggle();
             this.safewalk.sendToggle("Safewalk", "on", "off", this.safewalk.isToggled());
             if (!this.safewalk.isToggled()) {
-                KeyBinding.setKeyBindState(this.mc.gameSettings.keyBindSneak.getKeyCode(), false); // func_74510_a() ->
-                                                                                                   // setKeyBindState(),
-                                                                                                   // field_74311_E ->
-                                                                                                   // keyBindSneak,
-                                                                                                   // func_151463_i() ->
-                                                                                                   // getKeyCode()
+                KeyBinding.setKeyBindState(this.mc.gameSettings.keyBindSneak.getKeyCode(), false);
             }
         }
-        this.player.setUserSneaking(Keyboard.isKeyDown(this.mc.gameSettings.keyBindSneak.getKeyCode())); // func_151463_i()
-                                                                                                         // ->
-                                                                                                         // getKeyCode()
+        this.player.setUserSneaking(Keyboard.isKeyDown(this.mc.gameSettings.keyBindSneak.getKeyCode()));
     }
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.player == this.mc.thePlayer && this.safewalk.isToggled()) { // field_71439_g -> thePlayer
+        if (event.player == this.mc.thePlayer && this.safewalk.isToggled()) {
             this.player.onTick();
         }
     }
 
     @SubscribeEvent
     public void onEntityJump(LivingEvent.LivingJumpEvent event) {
-        if (event.entity == this.mc.thePlayer) { // field_71439_g -> thePlayer
+        if (event.entity == this.mc.thePlayer) {
             this.player.onJump();
         }
     }

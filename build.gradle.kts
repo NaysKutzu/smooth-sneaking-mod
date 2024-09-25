@@ -86,6 +86,7 @@ dependencies {
 
     // If you want to include other dependencies, you can add them here
     implementation("org.nanohttpd:nanohttpd:2.3.1")
+    implementation("club.minnced:java-discord-rpc:2.0.1")
 }
 // Tasks:
 
