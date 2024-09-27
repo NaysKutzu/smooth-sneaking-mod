@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "MixinEntityPlayer",
-    "MixinGuiNewChat"
+    "MixinGuiNewChat",
+    "MixinEntityRenderer"
   ]
 }

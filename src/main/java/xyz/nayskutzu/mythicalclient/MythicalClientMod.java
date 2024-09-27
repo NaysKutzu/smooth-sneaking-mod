@@ -8,11 +8,12 @@ import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
-import xyz.nayskutzu.mythicalclient.event.BlockChatWords;
+import xyz.nayskutzu.mythicalclient.listeners.KeyListener;
+import xyz.nayskutzu.mythicalclient.listeners.RenderListener;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
-//import xyz.nayskutzu.mythicalclient.utils.DiscordRPCUtil;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 
 import net.minecraft.client.settings.KeyBinding;
@@ -66,12 +67,12 @@ public class MythicalClientMod {
             e.printStackTrace();
         }
         LOGGER.info("Web server started on port " + port);
-
+        MinecraftForge.EVENT_BUS.register(new KeyListener());
+        MinecraftForge.EVENT_BUS.register(new RenderListener());
         LOGGER.info("MythicalClient is initialized");
         WindowState.updateTitle("MythicalClient | ChillLoader (1.8.9)");
         WindowState.UpdateIcon();
         MythicalClientMenu.main();
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(BlockChatWords.instance);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         
         try {
