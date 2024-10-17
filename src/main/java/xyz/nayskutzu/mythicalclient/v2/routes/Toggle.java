@@ -6,9 +6,11 @@ import java.util.Map;
 import fi.iki.elonen.NanoHTTPD.IHTTPSession;
 import fi.iki.elonen.NanoHTTPD.Response;
 import net.minecraft.client.Minecraft;
+import xyz.nayskutzu.mythicalclient.MessageBox;
 import xyz.nayskutzu.mythicalclient.MythicalClientMod;
 import xyz.nayskutzu.mythicalclient.hacks.BridgeHack;
 import xyz.nayskutzu.mythicalclient.hacks.ChestESP;
+import xyz.nayskutzu.mythicalclient.hacks.NearPlayer;
 import xyz.nayskutzu.mythicalclient.hacks.NoGUI;
 import xyz.nayskutzu.mythicalclient.hacks.NukeProcess;
 import xyz.nayskutzu.mythicalclient.hacks.PlayerESP;
@@ -23,7 +25,9 @@ public class Toggle {
         try {
             session.parseBody(body);
         } catch (Exception e) {
+            MessageBox.error("ERROR", e.getMessage());
             return IResponse.sendManualResponse(500, "Internal Server Error", "Failed to parse body", false, null);
+
         }
         String modName = body.get("postData");
         if (modName == null) {
@@ -37,7 +41,6 @@ public class Toggle {
             return IResponse.sendManualResponse(400, "Bad Request", "Invalid mod parameter format", false, null);
         }
         System.out.println("Toggling mod: " + modName);
-
 
         if (modName.equals("BridgeHack")) {
             BridgeHack.main();
@@ -55,7 +58,7 @@ public class Toggle {
             Minecraft.getMinecraft().shutdown();
         }
         if (modName.equals("ForceOP")) {
-            MythicalClientMod.sendMessageToChat("&7[Server: Opped %player%]",true);
+            MythicalClientMod.sendMessageToChat("&7[Server: Opped %player%]", true);
         }
         if (modName.equals("ChestESP")) {
             ChestESP.main();
@@ -64,10 +67,13 @@ public class Toggle {
             PlayerHealth.main();
         }
         if (modName.equals("TntTimer")) {
-            TntTimer.main();   
+            TntTimer.main();
         }
         if (modName.equals("NoGUI")) {
             NoGUI.main();
+        }
+        if (modName.equals("NearPlayer")) {
+            NearPlayer.main();
         }
         return IResponse.OK("Updated", null);
     }

@@ -26,7 +26,6 @@ public class PlayerESP {
             enabled = true;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(instance);
             MythicalClientMod.sendMessageToChat("&7Player ESP is now &aenabled&7.",false);
-
         }
     }
 
@@ -36,10 +35,10 @@ public class PlayerESP {
             return;
 
         for (EntityPlayer player : mc.theWorld.playerEntities) {
-            if (player == mc.thePlayer)
+            if (player == mc.thePlayer || player.isDead)
                 continue;
             String playerName = player.getName();
-            if (player != mc.thePlayer && playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
+            if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
                     && !playerName.matches(".*&.*")) {
                 double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks
                         - mc.getRenderManager().viewerPosX;
@@ -47,10 +46,19 @@ public class PlayerESP {
                         - mc.getRenderManager().viewerPosY;
                 double z = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks
                         - mc.getRenderManager().viewerPosZ;
+                if (player.isSneaking()) {
+                    y -= 0.2;
+                }
+                if (player.isSprinting()) {
+                    y += 0.2;
+                }
+                
+                if (player == mc.thePlayer || mc.thePlayer.isSpectator()) {
+                    return;
+                }
 
                 drawESP(x, y, z, player.width, player.height);
             }
-
         }
     }
 

@@ -32,6 +32,11 @@ public class PlayerHealth {
         if (event.entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity; // Accessing the entity directly
 
+            // Skip rendering health for the player itself and if the player is in spectator mode
+            if (player == mc.thePlayer || player.isSpectator()) {
+                return;
+            }
+
             // Avoid displaying health for self and NPCs with empty or color-coded names
             String playerName = player.getName();
             if (player != mc.thePlayer && playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
@@ -55,6 +60,11 @@ public class PlayerHealth {
         }
         String healthText = healthTextBuilder.toString();
 
+        // Skip rendering health for the player itself and if the player is in spectator mode
+        if (player == mc.thePlayer || mc.thePlayer.isSpectator()) {
+            return;
+        }
+        
         // Display health text under player name
         try {
             GL11.glPushMatrix();
@@ -74,23 +84,10 @@ public class PlayerHealth {
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glPopMatrix();
-            displayHealthInChat(player);
         } catch (Exception e) {
             e.printStackTrace();
             MythicalClientMod.sendMessageToChat(
                     "&cAn error occurred while rendering health under player name." + e.getMessage(),false);
         }
-    }
-
-    private void displayHealthInChat(EntityPlayer player) {
-        return;
-        // Get player health
-        //float health = player.getHealth();
-        //float maxHealth = player.getMaxHealth();
-
-        // Prepare health text
-        //String healthText = String.format("%s has %.1f / %.1f health", player.getName(), health, maxHealth);
-
-        //MythicalClientMod.sendMessageToChat(healthText);
     }
 }

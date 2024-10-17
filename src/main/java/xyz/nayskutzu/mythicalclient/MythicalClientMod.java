@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
-
+import xyz.nayskutzu.mythicalclient.hacks.NearPlayer;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
@@ -65,7 +65,7 @@ public class MythicalClientMod {
         MythicalClientMod.data.put("name", "NaysKutzu");
         MythicalClientMod.data.put("uuid", "PLM");
         MythicalClientMod.data.put("version", "1.8.9");
-        
+        NearPlayer.main();
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:" + port));
         } catch (IOException e) {
@@ -99,13 +99,18 @@ public class MythicalClientMod {
     }
 
     public static void sendMessageToChat(String message, boolean raw) {
+        
         String playerName = net.minecraft.client.Minecraft.getMinecraft().thePlayer.getName();
         String formattedMessage = message.replace("%player%", playerName);
         if (!raw) {
             formattedMessage = "&7[&5&lMythical&d&lClient&7] ➡ " + formattedMessage;
         }
-        net.minecraft.client.Minecraft.getMinecraft().thePlayer.addChatMessage(new net.minecraft.util.ChatComponentText(
+        if (Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null) {
+            net.minecraft.client.Minecraft.getMinecraft().thePlayer.addChatMessage(new net.minecraft.util.ChatComponentText(
                 ChatColor.translateAlternateColorCodes('&', formattedMessage)));
+        } else {
+            LOGGER.warn("Player or world is null, cannot send chat message.");
+        }
     }
 
     public void sendChat(String message) {
