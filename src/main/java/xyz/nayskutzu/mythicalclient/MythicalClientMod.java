@@ -8,21 +8,16 @@ import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
-import xyz.nayskutzu.mythicalclient.listeners.KeyListener;
-import xyz.nayskutzu.mythicalclient.listeners.RenderListener;
+
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 
 import net.minecraft.client.settings.KeyBinding;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +26,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 @Mod(modid = "mythicalclient", clientSideOnly = true, useMetadata = true)
 public class MythicalClientMod {
-    // private final Minecraft mc = Minecraft.getMinecraft();
     public static boolean ToggleSneak = false;
     private static final Logger LOGGER = LogManager.getLogger();
     public static MythicalClientMod instance = new MythicalClientMod();
@@ -39,14 +33,12 @@ public class MythicalClientMod {
     private static Config config;
     private boolean toggled = false;
     public static int port;
-    private static final Minecraft mc = Minecraft.getMinecraft();
     public static MemoryStorageDriveData data = new MemoryStorageDriveData();
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         config.updateConfig(event.getSuggestedConfigurationFile(), true);
         port = 9865;
-        //DiscordRPCUtil.update("MythicalClient", "In the main menu!", "", "");
     }
 
     @Mod.EventHandler
@@ -67,55 +59,31 @@ public class MythicalClientMod {
             e.printStackTrace();
         }
         LOGGER.info("Web server started on port " + port);
-        MinecraftForge.EVENT_BUS.register(new KeyListener());
-        MinecraftForge.EVENT_BUS.register(new RenderListener());
         LOGGER.info("MythicalClient is initialized");
         WindowState.updateTitle("MythicalClient | ChillLoader (1.8.9)");
         WindowState.UpdateIcon();
-        MythicalClientMenu.main();
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        MythicalClientMod.data.put("name", "NaysKutzu");
+        MythicalClientMod.data.put("uuid", "PLM");
+        MythicalClientMod.data.put("version", "1.8.9");
         
         try {
-            scheduler.schedule(() -> {
-
-                try {
-                    while (mc.thePlayer == null) {
-                        try {
-                            Thread.sleep(1000); // Wait for 1 second before checking again
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    MythicalClientMod.data.put("name", mc.thePlayer.getName());
-                    MythicalClientMod.data.put("uuid", mc.thePlayer.getUniqueID().toString());
-                    MythicalClientMod.data.put("version", "1.8.9");
-                    try {
-                        java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:" + port));
-                        MythicalClientMenu.frame.setVisible(false);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    MythicalClientMod.data.put("name", "Unknown");
-                    e.printStackTrace();
-                }
-            }, 3, TimeUnit.SECONDS); // Adjust the delay as needed
-        } catch (Exception e) {
+            java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:" + port));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
     }
 
     public void sendHelp() {
-        this.sendChat(ChatFormatting.LIGHT_PURPLE + "MythicalClient Help");
-        this.sendChat(ChatFormatting.YELLOW + "Commands:");
-        this.sendChat(ChatFormatting.YELLOW + "/safewalk mode - Change the mode");
-        this.sendChat(ChatFormatting.YELLOW + "/safewalk chat - Toggle chat messages");
-        this.sendChat(ChatFormatting.YELLOW + "/safewalk click - Toggle auto-click");
-        this.sendChat(ChatFormatting.YELLOW + "/safewalk fall - Toggle auto-disable on fall");
-        this.sendChat(ChatFormatting.YELLOW + "/safewalk jump - Toggle auto-disable on jump");
+        this.sendChat(ChatFormatting.LIGHT_PURPLE + "MythicalClient Help (SafeWalk)");
+        this.sendChat(ChatFormatting.GRAY + "Commands:");
+        this.sendChat(ChatFormatting.GRAY + "/safewalk mode - Change the mode");
+        this.sendChat(ChatFormatting.GRAY + "/safewalk chat - Toggle chat messages");
+        this.sendChat(ChatFormatting.GRAY + "/safewalk click - Toggle auto-click");
+        this.sendChat(ChatFormatting.GRAY + "/safewalk fall - Toggle auto-disable on fall");
+        this.sendChat(ChatFormatting.GRAY + "/safewalk jump - Toggle auto-disable on jump");
     }
 
     @Mod.EventHandler
@@ -147,6 +115,7 @@ public class MythicalClientMod {
     }
 
     public void sendToggle(String name, String good, String bad, boolean isGood) {
+
         this.sendChat(ChatFormatting.GRAY + "[" + ChatFormatting.DARK_PURPLE + name + ChatFormatting.GRAY + "]"
                 + ChatFormatting.WHITE + " toggled "
                 + (isGood ? ChatFormatting.GREEN + good : ChatFormatting.RED + bad));

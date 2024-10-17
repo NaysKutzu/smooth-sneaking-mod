@@ -143,11 +143,33 @@ private void doSafewalk() {
     }
 }
 
+/**private void tryRightClick() {
+    if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.getBlockPos() != null && this.mc.thePlayer.getHeldItem() != null && this.mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock && this.isFacingSide(this.mc.objectMouseOver.sideHit) && this.isSameBlock(this.mc.objectMouseOver.getBlockPos(), this.getBlock(this.currentBlock, this.mc.objectMouseOver.sideHit))) {
+        if (System.currentTimeMillis() - this.lastRightClick > this.rightClickDelay) {
+            this.lastRightClick = System.currentTimeMillis();
+            try {
+                java.awt.Robot robot = new java.awt.Robot();
+                robot.mousePress(java.awt.event.InputEvent.BUTTON1_DOWN_MASK);
+                robot.mouseRelease(java.awt.event.InputEvent.BUTTON1_DOWN_MASK);
+            } catch (java.awt.AWTException e) {
+                e.printStackTrace();
+            }
+            this.mc.thePlayer.swingItem();
+        } else {
+            this.mc.thePlayer.swingItem();
+        }
+    }
+}**/
+
 private void tryRightClick() {
-    if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.getBlockPos() != null && this.mc.thePlayer.getHeldItem() != null && this.mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock && this.isFacingSide(this.mc.objectMouseOver.sideHit) && this.isSameBlock(this.mc.objectMouseOver.getBlockPos(), this.getBlock(this.currentBlock, this.mc.objectMouseOver.sideHit)) && System.currentTimeMillis() - this.lastRightClick > this.rightClickDelay) {
-        this.lastRightClick = System.currentTimeMillis();
-        this.mc.playerController.onPlayerRightClick(this.mc.thePlayer, this.mc.theWorld, this.mc.thePlayer.getHeldItem(), this.mc.objectMouseOver.getBlockPos(), this.mc.objectMouseOver.sideHit, this.mc.objectMouseOver.hitVec);
-        this.mc.thePlayer.swingItem();
+    if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.getBlockPos() != null && this.mc.thePlayer.getHeldItem() != null && this.mc.thePlayer.getHeldItem().getItem() instanceof ItemBlock && this.isFacingSide(this.mc.objectMouseOver.sideHit) && this.isSameBlock(this.mc.objectMouseOver.getBlockPos(), this.getBlock(this.currentBlock, this.mc.objectMouseOver.sideHit))) {
+        if (System.currentTimeMillis() - this.lastRightClick > this.rightClickDelay) {
+            this.lastRightClick = System.currentTimeMillis();
+            // Player needs to right-click manually
+            //this.mc.thePlayer.swingItem();
+        } else {
+            //this.mc.thePlayer.swingItem();
+        }
     }
 }
 

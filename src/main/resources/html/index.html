@@ -45,31 +45,31 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                 <div class="space-y-4">
                     <div>
                         <h3 class="text-xl font-semibold mb-2">PlayerESP</h3>
-                        <button onclick="playerESP();"
+                        <button onclick="toggleMod('PlayerESP');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
                     </div>
                     <br>
                     <div>
                         <h3 class="text-xl font-semibold mb-2">Tracer</h3>
-                        <button onclick="Tracers();"
+                        <button onclick="toggleMod('Tracers');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
                     </div>
                     <br>
                     <div>
                         <h3 class="text-xl font-semibold mb-2">ChestESP</h3>
-                        <button onclick="ChestEsp();"
+                        <button onclick="toggleMod('ChestESP');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
                     </div>
                     <br>
                     <div>
                         <h3 class="text-xl font-semibold mb-2">PlayerHealth</h3>
-                        <button onclick="PlayerHealth();"
+                        <button onclick="toggleMod('PlayerHealth');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
                     </div>  
                     <br>
                     <div>
                         <h3 class="text-xl font-semibold mb-2">TntTimer</h3>
-                        <button onclick="TntTimer();"
+                        <button onclick="toggleMod('TntTimer');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
                     </div>
                 </div>
@@ -79,14 +79,14 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                 <div class="space-y-4">
                     <div>
                         <h3 class="text-xl font-semibold mb-2">SafeWalk</h3>
-                        <button onclick="safeWalk();"
+                        <button onclick="toggleMod('BridgeHack');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Activate</button>
                     </div>
                 </div>
                 <div class="space-y-4">
                     <div>
                         <h3 class="text-xl font-semibold mb-2">NoGUI</h3>
-                        <button onclick="NoGUI();"
+                        <button onclick="toggleMod('NoGUI');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Activate</button>
                     </div>
                 </div>
@@ -110,13 +110,13 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                 <div class="space-y-4">
                     <div>
                         <h3 class="text-xl font-semibold mb-2">Nuke</h3>
-                        <button onclick="nuke();"
+                        <button onclick="toggleMod('NukeProcess');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">Activate</button>
                     </div>
                     <br>
                     <div>
                         <h3 class="text-xl font-semibold mb-2">Kill Game</h3>
-                        <button onclick="killGame();"
+                        <button onclick="toggleMod('KillGame');"
                             class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">Activate</button>
                     </div>
                 </div>
@@ -127,7 +127,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
                     <div>
                         <div>
                             <h3 class="text-xl font-semibold mb-2">Force OP (Protocol LIB)</h3>
-                            <button onclick="forceop();"
+                            <button onclick="toggleMod('ForceOP');"
                                 class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Activate</button>
                         </div>
                         <br>
@@ -172,14 +172,14 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
     };
 
 
-    function playerESP() {
+    function toggleMod(modName) {
         axios.post('/toggle', {
-            mod: 'PlayerESP'
+            mod: modName
         })
             .then(response => {
                 Swal.fire({
-                    title: 'PlayerESP',
-                    text: 'PlayerESP has been toggled!',
+                    title: modName,
+                    text: `${modName} has been toggled!`,
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
@@ -188,170 +188,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
             .catch(error => {
                 Swal.fire({
                     title: 'Error',
-                    text: 'An error occurred while toggling PlayerESP.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-
-    function safeWalk() {
-        axios.post('/toggle', {
-            mod: 'BridgeHack'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'SafeWalk',
-                    text: 'SafeWalk has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling SafeWalk.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-    function Tracers() {
-        axios.post('/toggle', {
-            mod: 'Tracers'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'Tracers',
-                    text: 'Tracers has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling Tracers.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-    function nuke() {
-        axios.post('/toggle', {
-            mod: 'NukeProcess'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'Nuke',
-                    text: 'Nuke has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling Nuke.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-    function PlayerHealth() {
-        axios.post('/toggle', {
-            mod: 'PlayerHealth'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'PlayerHealth',
-                    text: 'PlayerHealth has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling PlayerHealth.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-    function killGame() {
-        axios.post('/toggle', {
-            mod: 'KillGame'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'Kill Game',
-                    text: 'Kill Game has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling Kill Game.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-
-    function forceop() {
-        axios.post('/toggle', {
-            mod: 'ForceOP'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'Force OP',
-                    text: 'Force OP has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling Force OP.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-    function ChestEsp() {
-        axios.post('/toggle', {
-            mod: 'ChestESP'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'ChestESP',
-                    text: 'ChestESP has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling ChestESP.',
+                    text: `An error occurred while toggling ${modName}.`,
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -397,74 +234,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css
         });
 
     }
-    function NoGUI() {
-        axios.post('/toggle', {
-            mod: 'NoGUI'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'NoGUI',
-                    text: 'NoGUI has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling NoGUI.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
     
-    function checkLicense() {
-        Swal.fire({
-            title: 'Checking License',
-            text: 'Please wait...',
-            timer: 1000,
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        }).then(() => {
-            Swal.fire({
-                title: 'License Valid',
-                text: 'Your license is valid!',
-                icon: 'success',
-                timer: 500,
-                showConfirmButton: false
-            });
-        });
-    }
-
-    function TntTimer() {
-        axios.post('/toggle', {
-            mod: 'TntTimer'
-        })
-            .then(response => {
-                Swal.fire({
-                    title: 'TntTimer',
-                    text: 'TntTimer has been toggled!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while toggling TntTimer.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-    checkLicense();
 </script>
 
 </html>
