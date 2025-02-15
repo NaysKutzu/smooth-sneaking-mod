@@ -60,12 +60,11 @@ public class MythicalClientMod {
         }
         LOGGER.info("Web server started on port " + port);
         LOGGER.info("MythicalClient is initialized");
-        WindowState.updateTitle("MythicalClient | ChillLoader (1.8.9)");
+        WindowState.updateTitle("MythicalClient | KutzuInject (1.8.9)");
         WindowState.UpdateIcon();
         MythicalClientMod.data.put("name", "NaysKutzu");
         MythicalClientMod.data.put("uuid", "PLM");
         MythicalClientMod.data.put("version", "1.8.9");
-        NearPlayer.main();
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:" + port));
         } catch (IOException e) {

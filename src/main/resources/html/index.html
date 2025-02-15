@@ -4,343 +4,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hack Client</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
-
+    <title>MythicalClient v3.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --background: #2c3e50;
+            --text: #ecf0f1;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #f0f0f0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background);
+            background-image: url("https://cdn.mythical.systems/background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .cheat-btn {
+            background-color: rgba(46, 204, 113, 0.2);
+            border: 2px solid var(--primary);
+            color: var(--text);
+            transition: all 0.3s ease;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
+        .cheat-btn:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(46, 204, 113, 0.3);
         }
 
-        .header h1 {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+        .cheat-input {
+            background-color: rgba(52, 152, 219, 0.2);
+            border: 2px solid var(--secondary);
+            color: var(--text);
+            transition: all 0.3s ease;
         }
 
-        .header p {
-            font-size: 1.2rem;
-            color: #d1d1d1;
+        .cheat-input:focus {
+            background-color: rgba(52, 152, 219, 0.4);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
         }
 
-        .category {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .module {
+            background-color: rgba(44, 62, 80, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .category h2 {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: #ffeb3b;
+        .module:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .category h3 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .category button {
-            width: 100%;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: bold;
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
             color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+            font-size: 16px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(-20px);
         }
 
-        .category button:hover {
-            transform: scale(1.05);
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .category button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
-        .bg-blue-600 {
-            background-color: #1e90ff;
-        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--primary), 0 0 20px var(--primary);
+            }
 
-        .bg-blue-600:hover {
-            background-color: #1c86ee;
-        }
-
-        .bg-green-600 {
-            background-color: #32cd32;
-        }
-
-        .bg-green-600:hover {
-            background-color: #2eb82e;
-        }
-
-        .bg-yellow-600 {
-            background-color: #ffeb3b;
-            color: #000;
-        }
-
-        .bg-yellow-600:hover {
-            background-color: #fdd835;
-        }
-
-        .bg-purple-600 {
-            background-color: #800080;
-        }
-
-        .bg-purple-600:hover {
-            background-color: #732673;
-        }
-
-        .bg-pink-600 {
-            background-color: #ff69b4;
-        }
-
-        .bg-pink-600:hover {
-            background-color: #ff1493;
-        }
-
-        .bg-red-600 {
-            background-color: #ff4500;
-        }
-
-        .bg-red-600:hover {
-            background-color: #ff0000;
-        }
-
-        .bg-indigo-600 {
-            background-color: #4b0082;
-        }
-
-        .bg-indigo-600:hover {
-            background-color: #3a0066;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #ffeb3b;
-            box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.5);
+            to {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--primary), 0 0 40px var(--primary);
+            }
         }
     </style>
 </head>
 
-<body class="bg-gray-900 text-white">
-    <br> <br>
-    <br>
-
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-7xl">
-            <h1 class="text-3xl font-bold mb-6 text-center">MythicalClient %version% (%player_name%)</h1>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            <div class="category">
-                <h2 class="text-2xl font-semibold mb-4">Render</h2>
+<body class="min-h-screen p-8">
+    <div class="container mx-auto">
+        <h1 class="text-5xl font-bold text-center mb-12 glow">MythicalClient v3.0</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="module p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-6 text-center text-primary">Render</h2>
                 <div class="space-y-4">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">PlayerESP</h3>
-                        <button onclick="toggleMod('PlayerESP');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
-                    </div>
-                    <br>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">Tracer</h3>
-                        <button onclick="toggleMod('Tracers');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
-                    </div>
-                    <br>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">ChestESP</h3>
-                        <button onclick="toggleMod('ChestESP');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
-                    </div>
-                    <br>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">PlayerHealth</h3>
-                        <button onclick="toggleMod('PlayerHealth');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
-                    </div>  
-                    <br>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">TntTimer</h3>
-                        <button onclick="toggleMod('TntTimer');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
-                    </div>
-                    <br>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">NearPlayer</h3>
-                        <button onclick="toggleMod('NearPlayer');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Activate</button>
-
-                    </div>
+                    <button onclick="toggleMod('PlayerESP')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">PlayerESP</button>
+                    <button onclick="toggleMod('Tracers')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">Tracer</button>
+                    <button onclick="toggleMod('ChestESP')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">ChestESP</button>
+                    <button onclick="toggleMod('PlayerHealth')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">PlayerHealth</button>
+                    <button onclick="toggleMod('TntTimer')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">TntTimer</button>
+                    <button onclick="toggleMod('NearPlayer')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">NearPlayer</button>
                 </div>
             </div>
-            <div class="category">
-                <h2 class="text-2xl font-semibold mb-4">Movement</h2>
+            <div class="module p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-6 text-center text-primary">Movement</h2>
                 <div class="space-y-4">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">SafeWalk</h3>
-                        <button onclick="toggleMod('BridgeHack');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Activate</button>
-                    </div>
-                </div>
-                <br>
-                <div class="space-y-4">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">NoGUI</h3>
-                        <button onclick="toggleMod('NoGUI');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Activate</button>
-                    </div>
+                    <button onclick="toggleMod('BridgeHack')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">SafeWalk</button>
+                    <button onclick="toggleMod('NoGUI')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">NoGUI</button>
+                    <button onclick="toggleMod('FireballDetector')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">FireballDetector</button>
                 </div>
             </div>
-            <div class="category">
-                <h2 class="text-2xl font-semibold mb-4">Communication</h2>
+            <div class="module p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-6 text-center text-primary">Communication</h2>
                 <div class="space-y-4">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">Send Chat Message</h3>
-                        <form action="/sendchat" method="get">
-                            <input type="text" placeholder="Enter message" name="postData" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-700 text-white">
-                            <button
-                                class="w-full mt-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Send</button>
-                        </form>
-                    </div>
+                    <input type="text" id="chatMessage" placeholder="Enter message"
+                        class="cheat-input w-full py-3 px-4 rounded-md text-sm">
+                    <button onclick="sendChat()"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">Send Chat Message</button>
                 </div>
             </div>
-            <div class="category">
-                <h2 class="text-2xl font-semibold mb-4">Destruction</h2>
+            <div class="module p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-6 text-center text-primary">Destruction</h2>
                 <div class="space-y-4">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">Nuke</h3>
-                        <button onclick="toggleMod('NukeProcess');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">Activate</button>
-                    </div>
-                    <br>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">Kill Game</h3>
-                        <button onclick="toggleMod('KillGame');"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">Activate</button>
-                    </div>
+                    <button onclick="toggleMod('NukeProcess')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">Nuke</button>
+                    <button onclick="toggleMod('KillGame')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">Kill Game</button>
                 </div>
             </div>
-            <div class="category">
-                <h2 class="text-2xl font-semibold mb-4">Miscellaneous</h2>
+            <div class="module p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-6 text-center text-primary">Miscellaneous</h2>
                 <div class="space-y-4">
-                    <div>
-                        <div>
-                            <h3 class="text-xl font-semibold mb-2">Force OP (Protocol LIB)</h3>
-                            <button onclick="toggleMod('ForceOP');"
-                                class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Activate</button>
-                        </div>
-                        <br>
-                        <div>
-                            <h3 class="text-xl font-semibold mb-2">Execute</h3>
-                            <button onclick="runJavaCode();"
-                                class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Execute</button>
-                        </div>
-                    </div>
+                    <button onclick="toggleMod('ForceOP')"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">Force OP (Protocol
+                        LIB)</button>
+                    <button onclick="runJavaCode()"
+                        class="cheat-btn w-full py-3 px-4 rounded-md text-sm font-semibold">Execute Java Code</button>
                 </div>
             </div>
         </div>
     </div>
-    <br> <br>
-    <br>
+    <div id="alert" class="alert"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.style.backgroundColor = type === 'success' ? 'rgba(46, 204, 113, 0.9)' : 'rgba(231, 76, 60, 0.9)';
+            alert.classList.add('show');
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 3000);
+        }
 
-</body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
-
-<script>
-    function toggleMod(modName) {
-        axios.post('/toggle', {
-            mod: modName
-        })
-            .then(response => {
-                Swal.fire({
-                    title: modName,
-                    text: `${modName} has been toggled!`,
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: `An error occurred while toggling ${modName}.`,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                console.error(error);
-            });
-    }
-    function runJavaCode() {
-        Swal.fire({
-            title: 'Enter Java Code',
-            input: 'textarea',
-            inputAttributes: {
-                'aria-label': 'Type your Java code here'
-            },
-            showCancelButton: true,
-            confirmButtonText: 'Run',
-            preConfirm: (code) => {
-                return code;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axios.post('/run', {
-                    code: result.value
+        function toggleMod(modName) {
+            axios.post('/toggle', { mod: modName })
+                .then(response => {
+                    showAlert(`${modName} has been toggled!`, 'success');
+                    console.log(response.data);
                 })
+                .catch(error => {
+                    showAlert(`An error occurred while toggling ${modName}.`, 'error');
+                    console.error(error);
+                });
+        }
+
+        function sendChat() {
+            const message = document.getElementById('chatMessage').value;
+            axios.post('/sendchat', { postData: message })
+                .then(response => {
+                    showAlert('Your chat message has been sent!', 'success');
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    showAlert('An error occurred while sending the chat message.', 'error');
+                    console.error(error);
+                });
+        }
+
+        function runJavaCode() {
+            const code = prompt('Enter Java Code:');
+            if (code) {
+                axios.post('/run', { code: code })
                     .then(response => {
-                        Swal.fire({
-                            title: 'Java Code',
-                            text: 'Java code has been executed!',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        });
+                        showAlert('Java code has been executed!', 'success');
                         console.log(response.data);
                     })
                     .catch(error => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while executing Java code.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
+                        showAlert('An error occurred while executing Java code.', 'error');
                         console.error(error);
                     });
             }
-        });
-
-    }
-    
-</script>
+        }
+    </script>
+</body>
 
 </html>

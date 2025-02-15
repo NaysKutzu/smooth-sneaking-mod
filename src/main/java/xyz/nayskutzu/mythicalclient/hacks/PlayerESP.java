@@ -65,17 +65,27 @@ public class PlayerESP {
     private void drawESP(double x, double y, double z, float width, float height) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
-        GL11.glLineWidth(4.0F);
         GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(1.0F, 0.0F, 0.0F, 0.5F);
 
+        // Draw filled box with transparency
+        GL11.glLineWidth(1.0F);
+        float[] rgbFill = getRainbowColor(2000, 0.6f); // Slower rainbow for fill
+        GlStateManager.color(rgbFill[0], rgbFill[1], rgbFill[2], 0.2F);
         AxisAlignedBB box = new AxisAlignedBB(-width / 2, 0, -width / 2, width / 2, height, width / 2);
-        drawBoundingBox(box);
+        drawFilledBox(box);
+
+        // Draw outline with rainbow effect
+        GL11.glLineWidth(2.5F);
+        drawRainbowOutline(box);
+
+        // Draw corner highlights
+        GL11.glLineWidth(3.0F);
+        drawBoxHighlights(box);
 
         GlStateManager.enableCull();
         GlStateManager.enableLighting();
@@ -85,34 +95,188 @@ public class PlayerESP {
         GlStateManager.popMatrix();
     }
 
-    private void drawBoundingBox(AxisAlignedBB box) {
+    private float[] getRainbowColor(int speed, float saturation) {
+        float hue = (System.currentTimeMillis() % speed) / (float) speed;
+        return getRGBFromHSB(hue, saturation, 1.0f);
+    }
+
+    private float[] getRGBFromHSB(float hue, float saturation, float brightness) {
+        int rgb = java.awt.Color.HSBtoRGB(hue, saturation, brightness);
+        return new float[] {
+            ((rgb >> 16) & 0xFF) / 255f,
+            ((rgb >> 8) & 0xFF) / 255f,
+            (rgb & 0xFF) / 255f
+        };
+    }
+
+    private void drawRainbowOutline(AxisAlignedBB box) {
         GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(box.minX, box.minY, box.minZ);
-        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
-        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
-        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
-        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
-        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
-        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
-        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+        
+        // Draw vertical lines with rainbow gradient
+        for (int i = 0; i < 4; i++) {
+            float[] bottomColor = getRainbowColor(2000, 1.0f);
+            float[] topColor = getRainbowColor(2000, 0.7f);
+            
+            switch(i) {
+                case 0:
+                    GlStateManager.color(bottomColor[0], bottomColor[1], bottomColor[2], 1.0F);
+                    GL11.glVertex3d(box.minX, box.minY, box.minZ);
+                    GlStateManager.color(topColor[0], topColor[1], topColor[2], 1.0F);
+                    GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+                    break;
+                case 1:
+                    GlStateManager.color(bottomColor[0], bottomColor[1], bottomColor[2], 1.0F);
+                    GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+                    GlStateManager.color(topColor[0], topColor[1], topColor[2], 1.0F);
+                    GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+                    break;
+                case 2:
+                    GlStateManager.color(bottomColor[0], bottomColor[1], bottomColor[2], 1.0F);
+                    GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+                    GlStateManager.color(topColor[0], topColor[1], topColor[2], 1.0F);
+                    GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+                    break;
+                case 3:
+                    GlStateManager.color(bottomColor[0], bottomColor[1], bottomColor[2], 1.0F);
+                    GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+                    GlStateManager.color(topColor[0], topColor[1], topColor[2], 1.0F);
+                    GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+                    break;
+            }
+        }
 
-        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
-        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
-        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
-        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
-        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
-        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
-        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
-        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+        // Draw horizontal lines with rainbow effect
+        float offset = (System.currentTimeMillis() % 2000) / 2000f;
+        
+        // Bottom edges
+        for (int i = 0; i < 4; i++) {
+            float[] color = getRainbowColor(2000, 1.0f);
+            GlStateManager.color(color[0], color[1], color[2], 1.0F);
+            
+            switch(i) {
+                case 0:
+                    GL11.glVertex3d(box.minX, box.minY, box.minZ);
+                    GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+                    break;
+                case 1:
+                    GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+                    GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+                    break;
+                case 2:
+                    GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+                    GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+                    break;
+                case 3:
+                    GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+                    GL11.glVertex3d(box.minX, box.minY, box.minZ);
+                    break;
+            }
+        }
 
+        // Top edges with brighter colors
+        for (int i = 0; i < 4; i++) {
+            float[] color = getRainbowColor(2000, 0.7f);
+            GlStateManager.color(color[0], color[1], color[2], 1.0F);
+            
+            switch(i) {
+                case 0:
+                    GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+                    GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+                    break;
+                case 1:
+                    GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+                    GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+                    break;
+                case 2:
+                    GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+                    GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+                    break;
+                case 3:
+                    GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+                    GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+                    break;
+            }
+        }
+        GL11.glEnd();
+    }
+
+    private void drawBoxHighlights(AxisAlignedBB box) {
+        float[] highlightColor = getRainbowColor(1000, 0.5f); // Faster rainbow for highlights
+        GlStateManager.color(highlightColor[0], highlightColor[1], highlightColor[2], 1.0F);
+        GL11.glBegin(GL11.GL_LINES);
+        
+        float highlightLength = 0.15f;
+        
+        // Draw all corner highlights
+        // Top front right
+        drawCornerHighlight(box.maxX, box.maxY, box.maxZ, highlightLength);
+        // Top front left
+        drawCornerHighlight(box.minX, box.maxY, box.maxZ, highlightLength);
+        // Top back right
+        drawCornerHighlight(box.maxX, box.maxY, box.minZ, highlightLength);
+        // Top back left
+        drawCornerHighlight(box.minX, box.maxY, box.minZ, highlightLength);
+        // Bottom front right
+        drawCornerHighlight(box.maxX, box.minY, box.maxZ, highlightLength);
+        // Bottom front left
+        drawCornerHighlight(box.minX, box.minY, box.maxZ, highlightLength);
+        // Bottom back right
+        drawCornerHighlight(box.maxX, box.minY, box.minZ, highlightLength);
+        // Bottom back left
+        drawCornerHighlight(box.minX, box.minY, box.minZ, highlightLength);
+        
+        GL11.glEnd();
+    }
+
+    private void drawCornerHighlight(double x, double y, double z, float length) {
+        // Horizontal line
+        GL11.glVertex3d(x, y, z);
+        GL11.glVertex3d(x - length, y, z);
+        // Vertical line
+        GL11.glVertex3d(x, y, z);
+        GL11.glVertex3d(x, y - length, z);
+        // Depth line
+        GL11.glVertex3d(x, y, z);
+        GL11.glVertex3d(x, y, z - length);
+    }
+
+    private void drawFilledBox(AxisAlignedBB box) {
+        GL11.glBegin(GL11.GL_QUADS);
+        // Bottom
         GL11.glVertex3d(box.minX, box.minY, box.minZ);
-        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
         GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+        
+        // Top
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
         GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+        
+        // Front
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
         GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
         GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+        
+        // Back
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+        
+        // Left
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
         GL11.glVertex3d(box.minX, box.minY, box.maxZ);
         GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+        
+        // Right
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
         GL11.glEnd();
     }
 }

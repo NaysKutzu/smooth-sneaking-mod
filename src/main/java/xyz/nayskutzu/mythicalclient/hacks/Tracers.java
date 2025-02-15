@@ -14,6 +14,7 @@ public class Tracers {
     private static final Minecraft mc = Minecraft.getMinecraft();
     public static boolean enabled;
     private static final Tracers instance = new Tracers();
+    private long startTime = System.currentTimeMillis();
 
     public static void main() {
         if (enabled) {
@@ -59,17 +60,35 @@ public class Tracers {
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(0.0F, 0.0F, 1.0F, 0.5F);
-        GL11.glLineWidth(3.0F);
+
+        float hue = (System.currentTimeMillis() - startTime) % 3000 / 3000f;
+        float[] rgb = getRainbowColor(hue);
+        
+        GL11.glLineWidth(2.0F);
+        GlStateManager.color(rgb[0], rgb[1], rgb[2], 0.75F);
+
         GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(0, mc.thePlayer.getEyeHeight(), 0); // Start at the player's eye height
-        GL11.glVertex3d(x, y + mc.thePlayer.getEyeHeight(), z); // End at the other player's position
+        GlStateManager.color(rgb[0], rgb[1], rgb[2], 0.1F);
+        GL11.glVertex3d(0, mc.thePlayer.getEyeHeight(), 0);
+        
+        GlStateManager.color(rgb[0], rgb[1], rgb[2], 1.0F);
+        GL11.glVertex3d(x, y + 1.62, z);
         GL11.glEnd();
+
         GlStateManager.enableCull();
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
+    }
+
+    private float[] getRainbowColor(float hue) {
+        float[] rgb = new float[3];
+        int rgb_i = java.awt.Color.HSBtoRGB(hue, 0.8f, 1.0f);
+        rgb[0] = (rgb_i >> 16 & 255) / 255.0f;
+        rgb[1] = (rgb_i >> 8 & 255) / 255.0f;
+        rgb[2] = (rgb_i & 255) / 255.0f;
+        return rgb;
     }
 }

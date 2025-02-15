@@ -20,40 +20,77 @@ public class SafeWalk {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (MythicalClientMod.KeyBindSafewalk.isPressed()) {
-            this.safewalk.toggle();
-            this.safewalk.sendToggle("Safewalk", "on", "off", this.safewalk.isToggled());
-            if (!this.safewalk.isToggled()) {
-                KeyBinding.setKeyBindState(this.mc.gameSettings.keyBindSneak.getKeyCode(), false);
+        try {
+            if (mc == null || mc.gameSettings == null || mc.gameSettings.keyBindSneak == null) {
+                return;
             }
+
+            if (MythicalClientMod.KeyBindSafewalk != null && MythicalClientMod.KeyBindSafewalk.isPressed()) {
+                if (safewalk != null) {
+                    safewalk.toggle();
+                    safewalk.sendToggle("Safewalk", "on", "off", safewalk.isToggled());
+                    
+                    if (!safewalk.isToggled()) {
+                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindSneak.getKeyCode(), false);
+                    }
+                }
+            }
+
+            if (player != null) {
+                player.setUserSneaking(Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()));
+            }
+        } catch (Exception e) {
+            // Silently fail rather than crash
         }
-        this.player.setUserSneaking(Keyboard.isKeyDown(this.mc.gameSettings.keyBindSneak.getKeyCode()));
     }
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.player == this.mc.thePlayer && this.safewalk.isToggled()) {
-            this.player.onTick();
+        try {
+            if (mc == null || mc.thePlayer == null || safewalk == null || player == null) {
+                return;
+            }
+
+            if (event.player == mc.thePlayer && safewalk.isToggled()) {
+                player.onTick();
+            }
+        } catch (Exception e) {
+            // Silently fail rather than crash
         }
     }
 
     @SubscribeEvent
     public void onEntityJump(LivingEvent.LivingJumpEvent event) {
-        if (event.entity == this.mc.thePlayer) {
-            this.player.onJump();
+        try {
+            if (mc == null || mc.thePlayer == null || player == null || event.entity == null) {
+                return;
+            }
+
+            if (event.entity == mc.thePlayer) {
+                player.onJump();
+            }
+        } catch (Exception e) {
+            // Silently fail rather than crash
         }
     }
 
     @SubscribeEvent
     public void onConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        if (MythicalClientMod.ToggleSneak) {
-            new Delay(2000) {
-
-                @Override
-                public void onTick() {
-                    MythicalClientMod.sendMessageToChat("Toggled sneak is installed please uninstall to use safewalk!",false);
-                }
-            };
+        try {
+            if (MythicalClientMod.ToggleSneak) {
+                new Delay(2000) {
+                    @Override
+                    public void onTick() {
+                        try {
+                            MythicalClientMod.sendMessageToChat("Toggled sneak is installed please uninstall to use safewalk!", false);
+                        } catch (Exception e) {
+                            // Silently fail rather than crash
+                        }
+                    }
+                };
+            }
+        } catch (Exception e) {
+            // Silently fail rather than crash
         }
     }
 

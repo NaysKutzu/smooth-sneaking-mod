@@ -17,6 +17,7 @@ import xyz.nayskutzu.mythicalclient.hacks.PlayerESP;
 import xyz.nayskutzu.mythicalclient.hacks.PlayerHealth;
 import xyz.nayskutzu.mythicalclient.hacks.TntTimer;
 import xyz.nayskutzu.mythicalclient.hacks.Tracers;
+import xyz.nayskutzu.mythicalclient.hacks.FireballDetector;
 import xyz.nayskutzu.mythicalclient.v2.api.IResponse;
 
 public class Toggle {
@@ -74,6 +75,9 @@ public class Toggle {
         }
         if (modName.equals("NearPlayer")) {
             NearPlayer.main();
+        }
+        if (modName.equals("FireballDetector")) {
+            FireballDetector.main();
         }
         return IResponse.OK("Updated", null);
     }
