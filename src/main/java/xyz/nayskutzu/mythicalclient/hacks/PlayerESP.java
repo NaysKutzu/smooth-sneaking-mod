@@ -7,6 +7,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.nayskutzu.mythicalclient.MythicalClientMod;
+import xyz.nayskutzu.mythicalclient.utils.FriendlyPlayers;
 
 import org.lwjgl.opengl.GL11;
 
@@ -40,6 +41,9 @@ public class PlayerESP {
             String playerName = player.getName();
             if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
                     && !playerName.matches(".*&.*")) {
+                if (FriendlyPlayers.isFriendly(playerName)) {
+                    continue; // Skip rendering for friendly players
+                }
                 double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks
                         - mc.getRenderManager().viewerPosX;
                 double y = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks

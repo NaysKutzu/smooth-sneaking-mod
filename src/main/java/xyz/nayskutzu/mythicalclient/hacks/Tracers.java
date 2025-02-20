@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.nayskutzu.mythicalclient.MythicalClientMod;
+import xyz.nayskutzu.mythicalclient.utils.FriendlyPlayers;
 
 public class Tracers {
 
@@ -38,6 +39,9 @@ public class Tracers {
             String playerName = player.getName();
             if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
                     && !playerName.matches(".*&.*")) {
+                if (FriendlyPlayers.isFriendly(playerName)) {
+                    continue;
+                }
                 double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks
                         - mc.getRenderManager().viewerPosX;
                 double y = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks

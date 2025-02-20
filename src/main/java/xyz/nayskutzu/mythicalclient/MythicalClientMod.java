@@ -53,26 +53,18 @@ public class MythicalClientMod {
                 LOGGER.info("Web server is starting...");
                 Thread.sleep(1000);
             }
+            LOGGER.info("Web server started on port " + port);            
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to start web server", e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("Web server startup interrupted", e);
+            Thread.currentThread().interrupt();
         }
-        LOGGER.info("Web server started on port " + port);
+        
         LOGGER.info("MythicalClient is initialized");
-        WindowState.updateTitle("MythicalClient | KutzuInject (1.8.9)");
-        WindowState.UpdateIcon();
         MythicalClientMod.data.put("name", "NaysKutzu");
         MythicalClientMod.data.put("uuid", "PLM");
         MythicalClientMod.data.put("version", "1.8.9");
-        try {
-            java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:" + port));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void sendHelp() {

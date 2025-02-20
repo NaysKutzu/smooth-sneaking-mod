@@ -4,3 +4,4 @@ run/
 build/
 .gradle/
 bin/
+src/classes/BowDetector.ts
