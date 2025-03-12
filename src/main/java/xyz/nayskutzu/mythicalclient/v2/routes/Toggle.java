@@ -17,7 +17,9 @@ import xyz.nayskutzu.mythicalclient.hacks.PlayerESP;
 import xyz.nayskutzu.mythicalclient.hacks.PlayerHealth;
 import xyz.nayskutzu.mythicalclient.hacks.TntTimer;
 import xyz.nayskutzu.mythicalclient.hacks.Tracers;
+import xyz.nayskutzu.mythicalclient.hacks.Trajectories;
 import xyz.nayskutzu.mythicalclient.hacks.FireballDetector;
+import xyz.nayskutzu.mythicalclient.hacks.BedESP;
 import xyz.nayskutzu.mythicalclient.hacks.BowDetector;
 import xyz.nayskutzu.mythicalclient.hacks.ResourceESP;
 import xyz.nayskutzu.mythicalclient.v2.api.IResponse;
@@ -56,6 +58,12 @@ public class Toggle {
         }
         if (modName.equals("Tracers")) {
             Tracers.main();
+        }
+        if (modName.equals("BedESP")) {
+            BedESP.main();
+        }
+        if (modName.equals("Trajectories")) {
+            Trajectories.main();
         }
         if (modName.equals("KillGame")) {
             Minecraft.getMinecraft().shutdown();

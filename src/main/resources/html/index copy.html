@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MythicalClient v3.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --primary: #8B5CF6;
+            --secondary: #4338CA;
+            --accent: #C4B5FD;
+            --background: #0F172A;
+            --surface: rgba(15, 23, 42, 0.8);
+            --text: #E0E7FF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            background-image: url('https://cdn.mythical.systems/space-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            color: #A78BFA;
+            text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #A78BFA;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .module:hover {
+            border-color: rgba(167, 139, 250, 0.4);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.2);
+        }
+
+        .feature-btn {
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            color: #E0E7FF;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            width: 100%;
+            text-align: left;
+            position: relative;
+        }
+
+        .feature-btn:hover {
+            background: rgba(167, 139, 250, 0.2);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
+        .feature-btn::after {
+            content: '';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #A78BFA;
+            opacity: 0.5;
+        }
+
+        .input-field {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            color: #E0E7FF;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(167, 139, 250, 0.5);
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .friend-item:hover {
+            background: rgba(167, 139, 250, 0.2);
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #FCA5A5;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #FEE2E2;
+        }
+
+        .friends-list {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .friends-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .friends-list::-webkit-scrollbar-track {
+            background: rgba(167, 139, 250, 0.1);
+            border-radius: 2px;
+        }
+
+        .friends-list::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.3);
+            border-radius: 2px;
+        }
+
+        .friends-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.4);
+        }
+
+        .empty-friends {
+            text-align: center;
+            padding: 1rem;
+            color: rgba(224, 231, 255, 0.5);
+            font-style: italic;
+        }
+
+        .alert {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: rgba(167, 139, 250, 0.9);
+            color: white;
+            transform: translateY(-1rem);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .alert.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="p-8">
+    <div class="container mx-auto max-w-7xl">
+        <h1 class="title text-5xl font-bold text-center mb-16">
+            MythicalClient <span class="text-2xl opacity-75">v3.0</span>
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Combat Section -->
+            <div class="module">
+                <h2 class="section-title">Combat</h2>
+                <div class="space-y-2">
+                    <button onclick="toggleMod('PlayerESP')" class="feature-btn">PlayerESP</button>
+                    <button onclick="toggleMod('Tracers')" class="feature-btn">Tracers</button>
+                    <button onclick="toggleMod('ChestESP')" class="feature-btn">ChestESP</button>
+                    <button onclick="toggleMod('BedESP')" class="feature-btn">BedESP</button>
+                </div>
+            </div>
+
+            <!-- Movement Section -->
+            <div class="module">
+                <h2 class="section-title">Movement</h2>
+                <div class="space-y-2">
+                    <button onclick="toggleMod('BridgeHack')" class="feature-btn">SafeWalk</button>
+                    <button onclick="toggleMod('NoGUI')" class="feature-btn">NoGUI</button>
+                </div>
+            </div>
+
+            <!-- Detectors Section -->
+            <div class="module">
+                <h2 class="section-title">Detectors</h2>
+                <div class="space-y-2">
+                    <button onclick="toggleMod('FireballDetector')" class="feature-btn">Fireball Detector</button>
+                    <button onclick="toggleMod('BowDetector')" class="feature-btn">Bow Detector</button>
+                    <button onclick="toggleMod('PlayerHealth')" class="feature-btn">Player Health</button>
+                    <button onclick="toggleMod('TntTimer')" class="feature-btn">TNT Timer</button>
+                </div>
+            </div>
+
+            <!-- Resource Section -->
+            <div class="module">
+                <h2 class="section-title">Resource</h2>
+                <div class="space-y-2">
+                    <button onclick="toggleMod('ResourceESP')" class="feature-btn">Resource ESP</button>
+                </div>
+            </div>
+
+            <!-- Friends Section -->
+            <div class="module">
+                <h2 class="section-title">Friends</h2>
+                <div class="space-y-3">
+                    <div class="flex gap-2">
+                        <input type="text" id="friendlyPlayer" 
+                            placeholder="Enter player name" 
+                            class="input-field flex-1"
+                            onkeypress="if(event.key === 'Enter') addFriendlyPlayer()">
+                        <button onclick="addFriendlyPlayer()" 
+                            class="feature-btn w-20 flex items-center justify-center">
+                            <i class="fas fa-plus mr-1"></i> Add
+                        </button>
+                    </div>
+                    <div class="friends-list">
+                        <div id="friendsListItems" class="space-y-2">
+                            <!-- Friends will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Section -->
+            <div class="module">
+                <h2 class="section-title">Admin</h2>
+                <div class="space-y-3">
+                    <button onclick="toggleMod('ForceOP')" class="feature-btn">Force OP</button>
+                    <button onclick="toggleMod('KillGame')" class="feature-btn">Kill Game</button>
+                    <button onclick="toggleMod('NearPlayer')" class="feature-btn">Player</button>
+                    <button onclick="toggleMod('NukeProcess')" class="feature-btn">Nuke Process</button>
+                    <button onclick="runJavaCode()" class="feature-btn">Execute Java</button>
+                </div>
+            </div>
+
+            <!-- Chat Section -->
+            <div class="module">
+                <h2 class="section-title">Chat</h2>
+                <div class="space-y-3">
+                    <input type="text" id="chatMessage" placeholder="Enter message" class="input-field">
+                    <button onclick="sendChat()" class="feature-btn">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.style.backgroundColor = type === 'success' ? 'rgba(46, 204, 113, 0.9)' : 'rgba(231, 76, 60, 0.9)';
+            alert.classList.add('show');
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 3000);
+        }
+
+        function toggleMod(modName) {
+            axios.post('/toggle', { mod: modName })
+                .then(response => {
+                    showAlert(`${modName} has been toggled!`, 'success');
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    showAlert(`An error occurred while toggling ${modName}.`, 'error');
+                    console.error(error);
+                });
+        }
+
+        function sendChat() {
+            const message = document.getElementById('chatMessage').value;
+            axios.post('/sendchat', { postData: message })
+                .then(response => {
+                    showAlert('Your chat message has been sent!', 'success');
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    showAlert('An error occurred while sending the chat message.', 'error');
+                    console.error(error);
+                });
+        }
+
+        function runJavaCode() {
+            const code = prompt('Enter Java Code:');
+            if (code) {
+                axios.post('/run', { code: code })
+                    .then(response => {
+                        showAlert('Java code has been executed!', 'success');
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        showAlert('An error occurred while executing Java code.', 'error');
+                        console.error(error);
+                    });
+            }
+        }
+
+        let friendlyPlayers = new Set();
+
+        function addFriendlyPlayer() {
+            const playerName = document.getElementById('friendlyPlayer').value.trim();
+            if (playerName) {
+                axios.post('/addfriend', { playerName: playerName })
+                    .then(response => {
+                        friendlyPlayers.add(playerName);
+                        updateFriendsList();
+                        showAlert(`${playerName} has been added to friendly players!`, 'success');
+                        document.getElementById('friendlyPlayer').value = '';
+                    })
+                    .catch(error => {
+                        showAlert('An error occurred while adding friendly player.', 'error');
+                        console.error(error);
+                    });
+            }
+        }
+
+        function removeFriendlyPlayer(playerName) {
+            if (playerName) {
+                axios.post('/removefriend', { playerName: playerName })
+                    .then(response => {
+                        friendlyPlayers.delete(playerName);
+                        updateFriendsList();
+                        showAlert(`${playerName} has been removed from friendly players!`, 'success');
+                    })
+                    .catch(error => {
+                        showAlert('An error occurred while removing friendly player.', 'error');
+                        console.error(error);
+                    });
+            }
+        }
+
+        function updateFriendsList() {
+            const listElement = document.getElementById('friendsListItems');
+            listElement.innerHTML = '';
+            
+            if (friendlyPlayers.size === 0) {
+                listElement.innerHTML = `
+                    <div class="empty-friends">
+                        No friends added yet
+                    </div>
+                `;
+                return;
+            }
+
+            friendlyPlayers.forEach(player => {
+                const friendItem = document.createElement('div');
+                friendItem.className = 'friend-item';
+                friendItem.innerHTML = `
+                    <span class="text-sm font-medium">${player}</span>
+                    <button onclick="removeFriendlyPlayer('${player}')" class="delete-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                listElement.appendChild(friendItem);
+            });
+        }
+
+        // Load friendly players on page load
+        axios.get('/getfriends')
+            .then(response => {
+                friendlyPlayers = new Set(response.data);
+                updateFriendsList();
+            })
+            .catch(error => {
+                console.error('Error loading friendly players:', error);
+            });
+
+        // Enhance the addFriendlyPlayer function to clear input on Escape key
+        document.getElementById('friendlyPlayer').addEventListener('keyup', function(event) {
+            if (event.key === 'Escape') {
+                this.value = '';
+            }
+        });
+    </script>
+</body>
+
+</html>

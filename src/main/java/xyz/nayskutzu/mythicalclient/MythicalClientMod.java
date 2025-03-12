@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
-import xyz.nayskutzu.mythicalclient.hacks.NearPlayer;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
@@ -17,12 +16,22 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraft.client.settings.KeyBinding;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import xyz.nayskutzu.mythicalclient.commands.AntiCheatCommand;
+import xyz.nayskutzu.mythicalclient.commands.FakeStaffCommand;
+import xyz.nayskutzu.mythicalclient.commands.BanMeCommand;
+import xyz.nayskutzu.mythicalclient.commands.DutyCommand;
+import xyz.nayskutzu.mythicalclient.commands.PlayerInfoCommand;
+import xyz.nayskutzu.mythicalclient.commands.ShowStatsCommand;
+import net.minecraftforge.common.MinecraftForge;
+import xyz.nayskutzu.mythicalclient.handlers.ConnectionHandler;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @Mod(modid = "mythicalclient", clientSideOnly = true, useMetadata = true)
 public class MythicalClientMod {
@@ -61,10 +70,34 @@ public class MythicalClientMod {
             Thread.currentThread().interrupt();
         }
         
+        
+        // Register AntiCheat Command
+        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new AntiCheatCommand());
+        
+        // Register FakeStaff Command
+        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new FakeStaffCommand());
+        
+        // Register BanMe Command
+        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new BanMeCommand());
+        
+        // Register Duty Command
+        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new DutyCommand());
+        
+        // Register PlayerInfo Command
+        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new PlayerInfoCommand());
+        
+        // Register ShowStats Command
+        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new ShowStatsCommand());
+        
+        // Register Connection Handler
+        MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
+        
         LOGGER.info("MythicalClient is initialized");
         MythicalClientMod.data.put("name", "NaysKutzu");
         MythicalClientMod.data.put("uuid", "PLM");
         MythicalClientMod.data.put("version", "1.8.9");
+        
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void sendHelp() {
@@ -150,4 +183,8 @@ public class MythicalClientMod {
         }
     }
 
+    @SubscribeEvent
+    public void onClientTick(ClientTickEvent event) {
+
+    }
 }

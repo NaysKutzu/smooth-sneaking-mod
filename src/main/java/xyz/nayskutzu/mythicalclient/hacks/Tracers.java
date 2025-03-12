@@ -38,7 +38,7 @@ public class Tracers {
                 continue;
             String playerName = player.getName();
             if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
-                    && !playerName.matches(".*&.*")) {
+                    && !playerName.matches(".*&.*") && !playerName.matches(".*CIT-.*")) {
                 if (FriendlyPlayers.isFriendly(playerName)) {
                     continue;
                 }

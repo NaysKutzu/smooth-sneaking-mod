@@ -1,7 +1,6 @@
 package xyz.nayskutzu.mythicalclient.hacks;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBow;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

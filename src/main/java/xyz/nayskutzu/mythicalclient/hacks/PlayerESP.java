@@ -40,7 +40,7 @@ public class PlayerESP {
                 continue;
             String playerName = player.getName();
             if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
-                    && !playerName.matches(".*&.*")) {
+                    && !playerName.matches(".*&.*") && !playerName.matches(".*CIT-.*")) {
                 if (FriendlyPlayers.isFriendly(playerName)) {
                     continue; // Skip rendering for friendly players
                 }
@@ -148,9 +148,6 @@ public class PlayerESP {
                     break;
             }
         }
-
-        // Draw horizontal lines with rainbow effect
-        float offset = (System.currentTimeMillis() % 2000) / 2000f;
         
         // Bottom edges
         for (int i = 0; i < 4; i++) {

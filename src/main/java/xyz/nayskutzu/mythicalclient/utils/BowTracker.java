@@ -1,13 +1,10 @@
 package xyz.nayskutzu.mythicalclient.utils;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 
 public class BowTracker {
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
     public static boolean isHoldingBow(EntityPlayer player) {
         if (player == null) return false;
         

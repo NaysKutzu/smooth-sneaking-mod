@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import xyz.nayskutzu.mythicalclient.MythicalClientMod;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
