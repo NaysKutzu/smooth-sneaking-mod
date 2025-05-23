@@ -7,6 +7,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.nayskutzu.mythicalclient.MythicalClientMod;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
+import xyz.nayskutzu.mythicalclient.utils.FriendlyPlayers;
 
 public class PlayerHealth {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -48,7 +49,7 @@ public class PlayerHealth {
                 }
 
                 String playerName = player.getName();
-                if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*[§&].*")) {
+                if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*[§&].*") && !playerName.matches(".*CIT-.*") && !FriendlyPlayers.isFriendly(playerName)) {
                     displayHealthUnderName(player);
                 }
             }

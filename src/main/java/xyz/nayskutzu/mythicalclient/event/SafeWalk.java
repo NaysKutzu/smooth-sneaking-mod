@@ -28,7 +28,7 @@ public class SafeWalk {
             if (MythicalClientMod.KeyBindSafewalk != null && MythicalClientMod.KeyBindSafewalk.isPressed()) {
                 if (safewalk != null) {
                     safewalk.toggle();
-                    safewalk.sendToggle("Safewalk", "on", "off", safewalk.isToggled());
+                    safewalk.sendToggle("BridgeNoLagAssist", "on", "off", safewalk.isToggled());
                     
                     if (!safewalk.isToggled()) {
                         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSneak.getKeyCode(), false);

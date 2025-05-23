@@ -1,32 +1,33 @@
 package xyz.nayskutzu.mythicalclient.data;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class MemoryStorageDriveData {
-    private Map<String, Object> storage;
-
-    public MemoryStorageDriveData() {
-        storage = new HashMap<>();
-    }
-
+    private final Map<String, Object> dataMap = new ConcurrentHashMap<>();
+    
     public void put(String key, Object value) {
-        storage.put(key, value);
+        if (key == null) return;
+        dataMap.put(key, value);
     }
-
+    
     public Object get(String key) {
-        return storage.get(key);
+        return dataMap.get(key);
     }
-
+    
+    public boolean contains(String key) {
+        return dataMap.containsKey(key);
+    }
+    
     public void remove(String key) {
-        storage.remove(key);
+        dataMap.remove(key);
     }
-
-    public boolean containsKey(String key) {
-        return storage.containsKey(key);
-    }
-
+    
     public void clear() {
-        storage.clear();
+        dataMap.clear();
+    }
+    
+    public int size() {
+        return dataMap.size();
     }
 }

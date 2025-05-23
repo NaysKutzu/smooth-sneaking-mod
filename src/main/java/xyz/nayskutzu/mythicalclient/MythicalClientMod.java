@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.nayskutzu.mythicalclient.data.MemoryStorageDriveData;
 import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
+import xyz.nayskutzu.mythicalclient.v2.ChatServer;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
 import net.minecraftforge.fml.common.Loader;
 
@@ -36,68 +37,86 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 @Mod(modid = "mythicalclient", clientSideOnly = true, useMetadata = true)
 public class MythicalClientMod {
     public static boolean ToggleSneak = false;
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger("[MythicalClient]");
     public static MythicalClientMod instance = new MythicalClientMod();
     public static KeyBinding KeyBindSafewalk;
     private static Config config;
     private boolean toggled = false;
     public static int port;
+    public static int chatPort;
     public static MemoryStorageDriveData data = new MemoryStorageDriveData();
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         config.updateConfig(event.getSuggestedConfigurationFile(), true);
         port = 9865;
+        chatPort = 9866;
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         try {
-            while (isPortInUse(port)) {
-                port++;
-            }
-            WebServer webServer = new WebServer(port);
-            webServer.start();
-            while (!webServer.wasStarted()) {
-                LOGGER.info("Web server is starting...");
-                Thread.sleep(1000);
-            }
-            LOGGER.info("Web server started on port " + port);            
-        } catch (IOException e) {
-            LOGGER.error("Failed to start web server", e);
-        } catch (InterruptedException e) {
-            LOGGER.error("Web server startup interrupted", e);
-            Thread.currentThread().interrupt();
+            // Start web server in a separate thread to avoid blocking the main thread
+            new Thread(() -> {
+                try {
+                    int attemptPort = port;
+                    while (isPortInUse(attemptPort)) {
+                        attemptPort++;
+                    }
+                    port = attemptPort;
+                    
+                    WebServer webServer = new WebServer(port);
+                    webServer.start();
+                    LOGGER.info("Web server started on port " + port);
+                    
+                    MythicalClientMod.data.put("name", "NaysKutzu");
+                    MythicalClientMod.data.put("uuid", "PLM");
+                    MythicalClientMod.data.put("version", "1.8.9");
+                } catch (IOException e) {
+                    LOGGER.error("Failed to start web server", e);
+                }
+            }, "MythicalClient-WebServer").start();
+            
+            // Start chat server in a separate thread to avoid blocking the main thread
+            new Thread(() -> {
+                try {
+                    int attemptChatPort = chatPort;
+                    while (isPortInUse(attemptChatPort)) {
+                        attemptChatPort++;
+                    }
+                    chatPort = attemptChatPort;
+                    
+                    ChatServer chatServer = new ChatServer(chatPort);
+                    chatServer.start();
+                    LOGGER.info("Chat server started on port " + chatPort);
+                } catch (Exception e) {   
+                    LOGGER.error("Failed to start chat server", e);
+                }
+            }, "MythicalClient-ChatServer").start();
+            
+            // Register commands
+            registerCommands();
+            
+            // Register event handlers
+            MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
+            MinecraftForge.EVENT_BUS.register(this);
+            
+            LOGGER.info("MythicalClient is initialized");
+        } catch (Exception e) {
+            LOGGER.error("Error during initialization", e);
         }
+    }
+
+    private void registerCommands() {
+        net.minecraftforge.client.ClientCommandHandler commandHandler = 
+            net.minecraftforge.client.ClientCommandHandler.instance;
         
-        
-        // Register AntiCheat Command
-        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new AntiCheatCommand());
-        
-        // Register FakeStaff Command
-        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new FakeStaffCommand());
-        
-        // Register BanMe Command
-        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new BanMeCommand());
-        
-        // Register Duty Command
-        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new DutyCommand());
-        
-        // Register PlayerInfo Command
-        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new PlayerInfoCommand());
-        
-        // Register ShowStats Command
-        net.minecraftforge.client.ClientCommandHandler.instance.registerCommand(new ShowStatsCommand());
-        
-        // Register Connection Handler
-        MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
-        
-        LOGGER.info("MythicalClient is initialized");
-        MythicalClientMod.data.put("name", "NaysKutzu");
-        MythicalClientMod.data.put("uuid", "PLM");
-        MythicalClientMod.data.put("version", "1.8.9");
-        
-        MinecraftForge.EVENT_BUS.register(this);
+        commandHandler.registerCommand(new AntiCheatCommand());
+        commandHandler.registerCommand(new FakeStaffCommand());
+        commandHandler.registerCommand(new BanMeCommand());
+        commandHandler.registerCommand(new DutyCommand());
+        commandHandler.registerCommand(new PlayerInfoCommand());
+        commandHandler.registerCommand(new ShowStatsCommand());
     }
 
     public void sendHelp() {
@@ -123,18 +142,21 @@ public class MythicalClientMod {
     }
 
     public static void sendMessageToChat(String message, boolean raw) {
+        if (Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null) {
+            LOGGER.debug("Player or world is null, cannot send chat message.");
+            return;
+        }
         
-        String playerName = net.minecraft.client.Minecraft.getMinecraft().thePlayer.getName();
+        String playerName = Minecraft.getMinecraft().thePlayer.getName();
         String formattedMessage = message.replace("%player%", playerName);
+        
         if (!raw) {
             formattedMessage = "&7[&5&lMythical&d&lClient&7] ➡ " + formattedMessage;
         }
-        if (Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null) {
-            net.minecraft.client.Minecraft.getMinecraft().thePlayer.addChatMessage(new net.minecraft.util.ChatComponentText(
-                ChatColor.translateAlternateColorCodes('&', formattedMessage)));
-        } else {
-            LOGGER.warn("Player or world is null, cannot send chat message.");
-        }
+        
+        Minecraft.getMinecraft().thePlayer.addChatMessage(
+            new ChatComponentText(ChatColor.translateAlternateColorCodes('&', formattedMessage))
+        );
     }
 
     public void sendChat(String message) {
@@ -175,16 +197,22 @@ public class MythicalClientMod {
      * @return boolean
      */
     public static boolean isPortInUse(int port) {
-        try {
-            (new java.net.ServerSocket(port)).close();
+        try (java.net.ServerSocket socket = new java.net.ServerSocket(port)) {
+            // Port is available
             return false;
         } catch (java.io.IOException e) {
+            // Port is in use
             return true;
         }
     }
 
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event) {
-
+        // Only process on the client phase to reduce redundant processing
+        if (event.phase != net.minecraftforge.fml.common.gameevent.TickEvent.Phase.END) {
+            return;
+        }
+        
+        // Add any tick processing here, but keep it minimal
     }
 }

@@ -85,8 +85,16 @@ dependencies {
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
 
     // If you want to include other dependencies, you can add them here
-    shadowImpl("org.nanohttpd:nanohttpd:2.3.1")
-    shadowImpl("club.minnced:java-discord-rpc:2.0.1")
+    shadowImpl("org.nanohttpd:nanohttpd:2.3.1") {
+        isTransitive = true
+    }
+    shadowImpl("org.nanohttpd:nanohttpd-websocket:2.3.1") {
+        isTransitive = true
+    }
+    shadowImpl("org.nanohttpd:nanohttpd-webserver:2.3.1") {
+        isTransitive = true
+    }
+    shadowImpl("com.google.code.gson:gson:2.10.1")
 }
 // Tasks:
 
@@ -119,13 +127,6 @@ tasks.processResources {
     rename("(.+_at.cfg)", "META-INF/$1")
 }
 
-
-val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
-    archiveClassifier.set("")
-    from(tasks.shadowJar)
-    input.set(tasks.shadowJar.get().archiveFile)
-}
-
 tasks.jar {
     archiveClassifier.set("without-deps")
     destinationDirectory.set(layout.buildDirectory.dir("intermediates"))
@@ -134,6 +135,9 @@ tasks.jar {
 tasks.shadowJar {
     dependencies {
         exclude(dependency("org.spongepowered:mixin:.*"))
+        // Exclude problematic Jackson classes
+        exclude("/META-INF/versions/21/**")
+        exclude("/META-INF/versions/22/**")
     }
     destinationDirectory.set(layout.buildDirectory.dir("intermediates"))
     archiveClassifier.set("non-obfuscated-with-deps")
@@ -144,8 +148,32 @@ tasks.shadowJar {
         }
     }
 
-    // If you want to include other dependencies and shadow them, you can relocate them in here
-    fun relocate(name: String) = relocate(name, "$baseGroup.deps.$name")
+    // Relocate Jackson to avoid conflicts
+    relocate("com.fasterxml.jackson", "$baseGroup.deps.jackson")
+    relocate("com.google.gson", "$baseGroup.deps.gson")
+    relocate("okhttp3", "$baseGroup.deps.okhttp3")
+    relocate("okio", "$baseGroup.deps.okio")
+    relocate("org.slf4j", "$baseGroup.deps.slf4j")
+    relocate("com.google.protobuf", "$baseGroup.deps.protobuf")
+    relocate("org.jetbrains", "$baseGroup.deps.jetbrains")
+}
+
+val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
+    archiveClassifier.set("")
+    from(tasks.shadowJar)
+    input.set(tasks.shadowJar.get().archiveFile)
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
 }
 
 tasks.assemble.get().dependsOn(tasks.remapJar)
+
+// Clean up temporary files
+tasks.clean {
+    delete(layout.buildDirectory.dir("intermediates"))
+    delete(layout.buildDirectory.dir("libs"))
+}
+
+// Prevent temporary JAR from being copied to mods directory
+tasks.withType<Copy> {
+    exclude("**/*.temp.jar")
+}
