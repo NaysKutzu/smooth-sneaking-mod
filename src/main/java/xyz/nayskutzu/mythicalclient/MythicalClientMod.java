@@ -290,6 +290,8 @@ public class MythicalClientMod {
         if (KeyBindToggleGui.isPressed()) {
             mc.displayGuiScreen(new ToggleGui(mc.currentScreen));
         }
+        
+
         } catch (Exception e) {
             LOGGER.error("Error in key input handler: " + e.getMessage(), e);
         }

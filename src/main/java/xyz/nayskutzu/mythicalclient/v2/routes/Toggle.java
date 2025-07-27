@@ -23,6 +23,7 @@ import xyz.nayskutzu.mythicalclient.hacks.BedESP;
 import xyz.nayskutzu.mythicalclient.hacks.BowDetector;
 import xyz.nayskutzu.mythicalclient.hacks.ResourceESP;
 import xyz.nayskutzu.mythicalclient.hacks.ResourceGroundFinder;
+import xyz.nayskutzu.mythicalclient.hacks.BanMe;
 import xyz.nayskutzu.mythicalclient.v2.api.IResponse;
 
 public class Toggle {
@@ -78,6 +79,7 @@ public class Toggle {
         if (modName.equals("PlayerHealth")) {
             PlayerHealth.main();
         }
+
         if (modName.equals("TntTimer")) {
             TntTimer.main();
         }
@@ -98,6 +100,9 @@ public class Toggle {
         }
         if (modName.equals("ResourceGroundFinder")) {
             ResourceGroundFinder.main();
+        }
+        if (modName.equals("BanMe")) {
+            BanMe.main();
         }
         return IResponse.OK("Updated", null);
     }

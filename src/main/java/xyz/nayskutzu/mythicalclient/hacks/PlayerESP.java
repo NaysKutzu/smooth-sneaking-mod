@@ -12,8 +12,6 @@ import xyz.nayskutzu.mythicalclient.utils.FriendlyPlayers;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.authlib.GameProfile;
-
 public class PlayerESP {
 
     private static final Minecraft mc = Minecraft.getMinecraft();

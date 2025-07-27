@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.client.Minecraft;
 import xyz.nayskutzu.mythicalclient.MythicalClientMod;
 import xyz.nayskutzu.mythicalclient.utils.FriendlyPlayers;
