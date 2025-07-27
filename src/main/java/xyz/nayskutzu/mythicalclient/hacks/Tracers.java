@@ -3,6 +3,7 @@ package xyz.nayskutzu.mythicalclient.hacks;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -40,6 +41,9 @@ public class Tracers {
             if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
                     && !playerName.matches(".*&.*") && !playerName.matches(".*CIT-.*")) {
                 if (FriendlyPlayers.isFriendly(playerName)) {
+                    continue;
+                }
+                if (isNPC(playerName, player)) {
                     continue;
                 }
                 double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks
@@ -94,5 +98,23 @@ public class Tracers {
         rgb[1] = (rgb_i >> 8 & 255) / 255.0f;
         rgb[2] = (rgb_i & 255) / 255.0f;
         return rgb;
+    }
+    public static boolean isNPC(String playerName, EntityPlayer player) {
+        // 1. Check if player is not in the actual world (ghost tab list entry)
+        if (player == null || player.worldObj == null) {
+            return true;
+        }
+    
+        // 2. Check if the entity is not a real player instance (some NPCs are not EntityOtherPlayerMP)
+        if (!(player instanceof EntityOtherPlayerMP)) {
+            return true;
+        }
+    
+        // 3. Heuristic name check (used by plugins like Citizens)
+        if (playerName.startsWith("NPC_") || playerName.startsWith("Citizens")) {
+            return true;
+        }
+    
+        return false; // Probably a real player
     }
 }

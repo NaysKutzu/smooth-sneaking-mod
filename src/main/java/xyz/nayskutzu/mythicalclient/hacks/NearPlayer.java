@@ -32,7 +32,7 @@ public class NearPlayer {
             System.out.println("Failed to toggle NearPlayer: " + errorMessage);
             // mc.crashed(new CrashReport(errorMessage, e));
 
-            }
+        }
     }
 
     @SuppressWarnings("unchecked")

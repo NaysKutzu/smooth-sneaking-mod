@@ -53,10 +53,10 @@ public class BanMeCommand extends CommandBase {
                 Thread.sleep(500); // Wait half a second
                 mc.addScheduledTask(() -> {
                     IChatComponent message = new ChatComponentText(
-                        "§7⊲ §c§lGanster.org §7⊳\n" +
-                        "\n§cYou were §4§lPERMANENTLY§r§c banned from Ganster Network.\n" +
+                        "§7⊲ §c§lGamster.org §7⊳\n" +
+                        "\n§cYou were §4§lPERMANENTLY§r§c banned from Gamster Network.\n" +
                         "§7You were banned for §8⋙ §e" + reason + "\n" +
-                        "\n§7You can appeal this ban at §bhttps://unban.ganster.org"
+                        "\n§7You can appeal this ban at §bhttps://unban.gamster.org"
                     );
                     mc.displayGuiScreen(new GuiDisconnected(new GuiMainMenu(), "connect.failed", message));
                 });

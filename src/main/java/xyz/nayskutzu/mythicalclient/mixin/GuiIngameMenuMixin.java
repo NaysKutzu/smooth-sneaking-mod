@@ -15,11 +15,12 @@ public class GuiIngameMenuMixin extends GuiScreen {
     @Inject(method = "initGui", at = @At("RETURN"))
     private void addDashboardButton(CallbackInfo ci) {
         // Move all buttons down by 24 pixels
+        
         for (GuiButton button : this.buttonList) {
             if (button.id == 1) { // Back to Game button
                 continue;
             }
-            button.yPosition += 24;
+            button.yPosition += 90;
         }
         
         // Add dashboard button at the top

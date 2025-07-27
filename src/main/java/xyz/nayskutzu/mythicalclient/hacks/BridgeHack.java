@@ -20,7 +20,7 @@ public class BridgeHack {
         } else {
             enabled = true;
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(SafeWalk.instance);
-            MythicalClientMod.KeyBindSafewalk = new KeyBinding("Toggle Safewalk", 47, "Safewalk");
+            MythicalClientMod.KeyBindSafewalk = new KeyBinding("Toggle Safewalk", 47, "MythicalClient");
             ClientRegistry.registerKeyBinding(MythicalClientMod.KeyBindSafewalk);
             ClientCommandHandler.instance.registerCommand(SafeWalkCommand.instance);
             MythicalClientMod.sendMessageToChat("&7SafeWalk is now &aenabled&7.",false);

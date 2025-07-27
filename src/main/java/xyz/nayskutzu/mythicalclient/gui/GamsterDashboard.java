@@ -2,20 +2,29 @@ package xyz.nayskutzu.mythicalclient.gui;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import xyz.nayskutzu.mythicalclient.gui.components.ColorButton;
-import xyz.nayskutzu.mythicalclient.data.MockDataManager;
+import xyz.nayskutzu.mythicalclient.commands.FakeStaffCommand;
+import net.minecraft.util.ChatComponentText;
+import org.lwjgl.input.Keyboard;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+
 
 public class GamsterDashboard extends GuiScreen {
     private float animationProgress = 0;
     private long openTime;
     private static final int ANIMATION_DURATION = 200;
+    private GuiTextField playerNameField;
+    private GuiTextField reasonField;
+    private GuiTextField durationField;
+    private String selectedPunishment = null;
+    private static final String[] PUNISHMENT_TYPES = {"Ban", "Mute", "Kick", "Warn"};
+    private FakeStaffCommand fakeStaffCommand;
     
     public GamsterDashboard() {
         this.openTime = System.currentTimeMillis();
+        this.fakeStaffCommand = new FakeStaffCommand();
     }
     
     @Override
@@ -23,17 +32,51 @@ public class GamsterDashboard extends GuiScreen {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
         
-        // Left column - Staff Tools
-        this.buttonList.add(new ColorButton(1, centerX - 180, centerY - 70, 160, 20, "§c§lAnti-Cheat", 0xFF5555));
-        this.buttonList.add(new ColorButton(2, centerX - 180, centerY - 45, 160, 20, "§e§lPlayer Lookup", 0xFFAA00));
-        this.buttonList.add(new ColorButton(3, centerX - 180, centerY - 20, 160, 20, "§b§lPunishments", 0x55FFFF));
-        this.buttonList.add(new ColorButton(4, centerX - 180, centerY + 5, 160, 20, "§a§lReports", 0x55FF55));
+        // Player name input field
+        playerNameField = new GuiTextField(0, fontRendererObj, centerX - 100, centerY - 60, 200, 20);
+        playerNameField.setMaxStringLength(16);
+        playerNameField.setFocused(true);
+
+        // Duration field (for ban/mute)
+        durationField = new GuiTextField(1, fontRendererObj, centerX - 100, centerY - 30, 200, 20);
+        durationField.setMaxStringLength(20);
+
+        // Reason field
+        reasonField = new GuiTextField(2, fontRendererObj, centerX - 100, centerY, 200, 20);
+        reasonField.setMaxStringLength(100);
         
-        // Right column - Quick Actions
-        this.buttonList.add(new ColorButton(5, centerX + 20, centerY - 70, 160, 20, "§d§lVanish", 0xFF55FF));
-        this.buttonList.add(new ColorButton(6, centerX + 20, centerY - 45, 160, 20, "§6§lStaff Chat", 0xFF5500));
-        this.buttonList.add(new ColorButton(7, centerX + 20, centerY - 20, 160, 20, "§b§lSettings", 0x55FFFF));
-        this.buttonList.add(new ColorButton(8, centerX + 20, centerY + 5, 160, 20, "§c§lDisconnect", 0xFF5555));
+        // Punishment buttons
+        int buttonWidth = 75;
+        int spacing = 10;
+        int totalWidth = (buttonWidth * PUNISHMENT_TYPES.length) + (spacing * (PUNISHMENT_TYPES.length - 1));
+        int startX = centerX - (totalWidth / 2);
+        
+        for (int i = 0; i < PUNISHMENT_TYPES.length; i++) {
+            int x = startX + (i * (buttonWidth + spacing));
+            String type = PUNISHMENT_TYPES[i];
+            int color;
+            switch(type) {
+                case "Ban":
+                    color = 0xFF5555; // Red
+                    break;
+                case "Mute": 
+                    color = 0xFFAA00; // Orange
+                    break;
+                case "Kick":
+                    color = 0xFF55FF; // Pink
+                    break;
+                case "Warn":
+                    color = 0xFFFF55; // Yellow
+                    break;
+                default:
+                    color = 0xAAAAAA; // Gray
+            }
+            this.buttonList.add(new ColorButton(i, x, centerY + 30, buttonWidth, 20, "§l" + type, color));
+        }
+        
+        // Quick Actions
+        this.buttonList.add(new ColorButton(8, centerX - 100, centerY + 60, 95, 20, "§c§lDisconnect", 0xFF5555));
+        this.buttonList.add(new ColorButton(9, centerX + 5, centerY + 60, 95, 20, "§6§lToggle GUI", 0xFFAA00));
     }
     
     @Override
@@ -52,93 +95,122 @@ public class GamsterDashboard extends GuiScreen {
         GlStateManager.translate(-width / 2, -30, 0);
         drawCenteredString(fontRendererObj, "§c§lGamster Dashboard", width / 2, 30, 0xFFFFFF);
         GlStateManager.popMatrix();
+
+        // Draw field labels
+        drawCenteredString(fontRendererObj, "§7Enter Player Name:", width / 2, height - 75, 0xFFFFFF);
+        playerNameField.drawTextBox();
         
-        // Draw server stats
-        Map<String, Integer> stats = MockDataManager.getServerStats();
-        int y = height - 60;
-        drawCenteredString(fontRendererObj, String.format(
-            "§7Online Players: §f%d §8| §7Staff Online: §f%d §8| §7Active Reports: §f%d §8| §7AC Alerts: §f%d",
-            stats.get("Online Players"),
-            stats.get("Online Staff"),
-            stats.get("Active Reports"),
-            stats.get("AC Alerts")
-        ), width / 2, y, 0xFFFFFF);
+        drawCenteredString(fontRendererObj, "§7Duration (e.g. 30d, perm):", width / 2, height - 45, 0xFFFFFF);
+        durationField.drawTextBox();
+
+        drawCenteredString(fontRendererObj, "§7Reason:", width / 2, height - 15, 0xFFFFFF);
+        reasonField.drawTextBox();
         
-        // Draw nearby players
-        List<MockDataManager.PlayerData> nearbyPlayers = MockDataManager.getNearbyPlayers();
-        if (!nearbyPlayers.isEmpty()) {
-            drawString(fontRendererObj, "§7Nearby Players:", 5, 5, 0xFFFFFF);
-            int playerY = 20;
-            for (MockDataManager.PlayerData player : nearbyPlayers) {
-                String distance = String.format("%.1f", player.distance);
-                drawString(fontRendererObj, 
-                    String.format("§8> §f%s §7(%sm)", player.name, distance),
-                    5, playerY, 0xFFFFFF);
-                playerY += 12;
-            }
-        }
-        
-        // Draw recent alerts
-        List<MockDataManager.ACAlert> alerts = MockDataManager.getRecentAlerts();
-        if (!alerts.isEmpty()) {
-            drawString(fontRendererObj, "§c§lRecent Alerts:", width - 155, 5, 0xFFFFFF);
-            int alertY = 20;
-            for (MockDataManager.ACAlert alert : alerts.subList(0, Math.min(3, alerts.size()))) {
-                drawString(fontRendererObj, 
-                    String.format("§8> §f%s §7(%s)", alert.player, alert.hack),
-                    width - 155, alertY, 0xFFFFFF);
-                alertY += 12;
-            }
+        // Draw selected punishment info
+        if (selectedPunishment != null) {
+            drawCenteredString(fontRendererObj, 
+                String.format("§7Selected: §f%s", selectedPunishment),
+                width / 2, height - 50, 0xFFFFFF);
         }
         
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if (keyCode == 1 || keyCode == Keyboard.KEY_RSHIFT) {  // ESC or Right Shift
+            mc.displayGuiScreen(null);
+            return;
+        }
+        
+        if (playerNameField.isFocused()) {
+            playerNameField.textboxKeyTyped(typedChar, keyCode);
+        } else if (reasonField.isFocused()) {
+            reasonField.textboxKeyTyped(typedChar, keyCode);
+        } else if (durationField.isFocused()) {
+            durationField.textboxKeyTyped(typedChar, keyCode);
+        }
+        
+        // Tab between fields
+        if (keyCode == Keyboard.KEY_TAB) {
+            if (playerNameField.isFocused()) {
+                playerNameField.setFocused(false);
+                durationField.setFocused(true);
+            } else if (durationField.isFocused()) {
+                durationField.setFocused(false);
+                reasonField.setFocused(true);
+            } else if (reasonField.isFocused()) {
+                reasonField.setFocused(false);
+                playerNameField.setFocused(true);
+            } else {
+                playerNameField.setFocused(true);
+            }
+        }
+        
+        super.keyTyped(typedChar, keyCode);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        playerNameField.mouseClicked(mouseX, mouseY, mouseButton);
+        reasonField.mouseClicked(mouseX, mouseY, mouseButton);
+        durationField.mouseClicked(mouseX, mouseY, mouseButton);
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
     
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
-        switch (button.id) {
-            case 1: // Anti-Cheat
-                mc.displayGuiScreen(new AntiCheatGui(this));
-                break;
-            case 2: // Player Lookup
-                mc.displayGuiScreen(new PlayerLookupGui(this));
-                break;
-            case 3: // Punishments
-                mc.displayGuiScreen(new PunishmentGui(this));
-                break;
-            case 4: // Reports
-                // TODO: Reports GUI
-                break;
-            case 5: // Vanish
-                toggleVanish();
-                break;
-            case 6: // Staff Chat
-                toggleStaffChat();
-                break;
-            case 7: // Settings
-                mc.displayGuiScreen(new SettingsGui(this));
-                break;
-            case 8: // Disconnect
-                mc.displayGuiScreen(new DisconnectConfirmGui(this));
-                break;
+        if (button.id < PUNISHMENT_TYPES.length) {
+            String playerName = playerNameField.getText().trim();
+            String reason = reasonField.getText().trim();
+            String duration = durationField.getText().trim();
+            
+            if (!playerName.isEmpty()) {
+                String punishmentType = PUNISHMENT_TYPES[button.id].toLowerCase();
+                selectedPunishment = PUNISHMENT_TYPES[button.id];
+                
+                // Build command arguments
+                String[] args;
+                if (punishmentType.equals("kick") || punishmentType.equals("warn")) {
+                    args = reason.isEmpty() ? 
+                        new String[]{punishmentType, playerName} :
+                        new String[]{punishmentType, playerName, reason};
+                } else {
+                    // For ban and mute, include duration if specified
+                    if (!duration.isEmpty() && !reason.isEmpty()) {
+                        args = new String[]{punishmentType, playerName, duration, reason};
+                    } else if (!reason.isEmpty()) {
+                        args = new String[]{punishmentType, playerName, reason};
+                    } else {
+                        args = new String[]{punishmentType, playerName};
+                    }
+                }
+                
+                try {
+                    fakeStaffCommand.processCommand(mc.thePlayer, args);
+                } catch (Exception e) {
+                    mc.thePlayer.addChatMessage(new ChatComponentText("§cError executing punishment command."));
+                }
+            } else {
+                mc.thePlayer.addChatMessage(new ChatComponentText("§cPlease enter a player name."));
+            }
+        } else if (button.id == 8) { // Disconnect button
+            mc.displayGuiScreen(new DisconnectConfirmGui(this));
+        } else if (button.id == 9) { // Toggle GUI button
+            mc.displayGuiScreen(new ToggleGui(this));
         }
-    }
-    
-    private void toggleVanish() {
-        // TODO: Implement vanish toggle
-    }
-    
-    private void toggleStaffChat() {
-        // TODO: Implement staff chat toggle
     }
     
     @Override
     public void updateScreen() {
+        playerNameField.updateCursorCounter();
+        reasonField.updateCursorCounter();
+        durationField.updateCursorCounter();
         super.updateScreen();
     }
     
     @Override
     public boolean doesGuiPauseGame() {
-        return true;
+        return false;
     }
 } 

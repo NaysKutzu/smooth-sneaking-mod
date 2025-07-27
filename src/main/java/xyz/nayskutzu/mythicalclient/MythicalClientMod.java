@@ -12,26 +12,21 @@ import xyz.nayskutzu.mythicalclient.utils.ChatColor;
 import xyz.nayskutzu.mythicalclient.utils.Config;
 import xyz.nayskutzu.mythicalclient.v2.ChatServer;
 import xyz.nayskutzu.mythicalclient.v2.WebServer;
+import xyz.nayskutzu.mythicalclient.gui.ToggleGui;
 import net.minecraftforge.fml.common.Loader;
-
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import xyz.nayskutzu.mythicalclient.commands.AntiCheatCommand;
-import xyz.nayskutzu.mythicalclient.commands.FakeStaffCommand;
-import xyz.nayskutzu.mythicalclient.commands.BanMeCommand;
-import xyz.nayskutzu.mythicalclient.commands.DutyCommand;
-import xyz.nayskutzu.mythicalclient.commands.PlayerInfoCommand;
-import xyz.nayskutzu.mythicalclient.commands.ShowStatsCommand;
+import xyz.nayskutzu.mythicalclient.commands.*;
+import xyz.nayskutzu.mythicalclient.hacks.Aimbot;
 import net.minecraftforge.common.MinecraftForge;
-import xyz.nayskutzu.mythicalclient.handlers.ConnectionHandler;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @Mod(modid = "mythicalclient", clientSideOnly = true, useMetadata = true)
@@ -40,6 +35,12 @@ public class MythicalClientMod {
     private static final Logger LOGGER = LogManager.getLogger("[MythicalClient]");
     public static MythicalClientMod instance = new MythicalClientMod();
     public static KeyBinding KeyBindSafewalk;
+    public static KeyBinding KeyBindDashboard;
+    public static KeyBinding KeyBindPlayerInfo;
+    public static KeyBinding KeyBindGroundItems;
+    public static KeyBinding KeyBindBedDefence;
+    public static KeyBinding KeyBindAimbot;
+    public static KeyBinding KeyBindToggleGui;
     private static Config config;
     private boolean toggled = false;
     public static int port;
@@ -56,6 +57,19 @@ public class MythicalClientMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         try {
+            // Register keybindings
+            KeyBindPlayerInfo = new KeyBinding("Player Info", Keyboard.KEY_P, "MythicalClient");
+            KeyBindGroundItems = new KeyBinding("Ground Items", Keyboard.KEY_G, "MythicalClient");
+            KeyBindBedDefence = new KeyBinding("Bed Defence", Keyboard.KEY_B, "MythicalClient");
+            KeyBindAimbot = new KeyBinding("Aimbot", Keyboard.KEY_R, "MythicalClient");
+            KeyBindToggleGui = new KeyBinding("Toggle GUI", Keyboard.KEY_LCONTROL, "MythicalClient");
+            
+            ClientRegistry.registerKeyBinding(KeyBindPlayerInfo);
+            ClientRegistry.registerKeyBinding(KeyBindGroundItems);
+            ClientRegistry.registerKeyBinding(KeyBindBedDefence);
+            ClientRegistry.registerKeyBinding(KeyBindAimbot);
+            ClientRegistry.registerKeyBinding(KeyBindToggleGui);
+
             // Start web server in a separate thread to avoid blocking the main thread
             new Thread(() -> {
                 try {
@@ -98,7 +112,6 @@ public class MythicalClientMod {
             registerCommands();
             
             // Register event handlers
-            MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
             MinecraftForge.EVENT_BUS.register(this);
             
             LOGGER.info("MythicalClient is initialized");
@@ -117,6 +130,8 @@ public class MythicalClientMod {
         commandHandler.registerCommand(new DutyCommand());
         commandHandler.registerCommand(new PlayerInfoCommand());
         commandHandler.registerCommand(new ShowStatsCommand());
+        commandHandler.registerCommand(new GroundItemFinderCommand());
+        commandHandler.registerCommand(new BedDefenceInfoCommand());
     }
 
     public void sendHelp() {
@@ -127,6 +142,16 @@ public class MythicalClientMod {
         this.sendChat(ChatFormatting.GRAY + "/safewalk click - Toggle auto-click");
         this.sendChat(ChatFormatting.GRAY + "/safewalk fall - Toggle auto-disable on fall");
         this.sendChat(ChatFormatting.GRAY + "/safewalk jump - Toggle auto-disable on jump");
+        this.sendChat(ChatFormatting.GRAY + "/ac - Toggle anticheat");
+        this.sendChat(ChatFormatting.GRAY + "/banme - Ban yourself");
+        this.sendChat(ChatFormatting.GRAY + "/duty - Toggle duty mode");
+        this.sendChat(ChatFormatting.GRAY + "/playerinfo - Get player info");
+        this.sendChat(ChatFormatting.GRAY + "/showstats - Get player stats");
+        this.sendChat(ChatFormatting.GRAY + "/plinfo - Get player info (P)");
+        this.sendChat(ChatFormatting.GRAY + "/grounditems - Get ground items (G)");
+        this.sendChat(ChatFormatting.GRAY + "/beddefence - Get bed defence info (B)");
+        this.sendChat(ChatFormatting.GRAY + "Press R - Toggle Aimbot (continuous tracking)");
+        this.sendChat(ChatFormatting.GRAY + "Press LCONTROL - Toggle GUI (L)");
     }
 
     @Mod.EventHandler
@@ -206,6 +231,8 @@ public class MythicalClientMod {
         }
     }
 
+
+
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event) {
         // Only process on the client phase to reduce redundant processing
@@ -213,6 +240,58 @@ public class MythicalClientMod {
             return;
         }
         
-        // Add any tick processing here, but keep it minimal
+        // Update aimbot tracking
+        Aimbot.update();
+    }
+
+    @SubscribeEvent
+    public void onKeyInput(KeyInputEvent event) {
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
+            if (mc.thePlayer == null || mc.theWorld == null) return;
+        
+        if (KeyBindPlayerInfo.isPressed()) {
+            // Find closest player
+            net.minecraft.entity.player.EntityPlayer closestPlayer = null;
+            double closestDistance = Double.MAX_VALUE;
+            
+            for (Object obj : mc.theWorld.playerEntities) {
+                if (obj instanceof net.minecraft.entity.player.EntityPlayer) {
+                    net.minecraft.entity.player.EntityPlayer player = (net.minecraft.entity.player.EntityPlayer) obj;
+                    if (player != mc.thePlayer) {
+                        double distance = mc.thePlayer.getDistanceToEntity(player);
+                        if (distance < closestDistance) {
+                            closestDistance = distance;
+                            closestPlayer = player;
+                        }
+                    }
+                }
+            }
+            
+            if (closestPlayer != null) {
+                net.minecraftforge.client.ClientCommandHandler.instance.executeCommand(mc.thePlayer, "plinfo " + closestPlayer.getName());
+            } else {
+                sendMessageToChat("&c&l[!] &cNo players found nearby!", false);
+            }
+        }
+        
+        if (KeyBindGroundItems.isPressed()) {
+            net.minecraftforge.client.ClientCommandHandler.instance.executeCommand(mc.thePlayer, "grounditems");
+        }
+        
+        if (KeyBindBedDefence.isPressed()) {
+            net.minecraftforge.client.ClientCommandHandler.instance.executeCommand(mc.thePlayer, "beddefence");
+        }
+        
+        if (KeyBindAimbot.isPressed()) {
+            Aimbot.toggle();
+        }
+        
+        if (KeyBindToggleGui.isPressed()) {
+            mc.displayGuiScreen(new ToggleGui(mc.currentScreen));
+        }
+        } catch (Exception e) {
+            LOGGER.error("Error in key input handler: " + e.getMessage(), e);
+        }
     }
 }

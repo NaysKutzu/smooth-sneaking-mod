@@ -22,6 +22,7 @@ import xyz.nayskutzu.mythicalclient.hacks.FireballDetector;
 import xyz.nayskutzu.mythicalclient.hacks.BedESP;
 import xyz.nayskutzu.mythicalclient.hacks.BowDetector;
 import xyz.nayskutzu.mythicalclient.hacks.ResourceESP;
+import xyz.nayskutzu.mythicalclient.hacks.ResourceGroundFinder;
 import xyz.nayskutzu.mythicalclient.v2.api.IResponse;
 
 public class Toggle {
@@ -94,6 +95,9 @@ public class Toggle {
         }
         if (modName.equals("ResourceESP")) {
             ResourceESP.render(session);
+        }
+        if (modName.equals("ResourceGroundFinder")) {
+            ResourceGroundFinder.main();
         }
         return IResponse.OK("Updated", null);
     }

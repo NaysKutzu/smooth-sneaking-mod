@@ -20,6 +20,7 @@ public class RemoveFriend {
             String postData = body.get("postData");
             
             if (postData != null) {
+                @SuppressWarnings("unchecked")
                 Map<String, String> jsonData = gson.fromJson(postData, Map.class);
                 String playerName = jsonData.get("playerName");
                 if (playerName != null) {

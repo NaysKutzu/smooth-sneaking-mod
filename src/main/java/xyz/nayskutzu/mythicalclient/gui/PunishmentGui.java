@@ -187,6 +187,8 @@ public class PunishmentGui extends GuiScreen {
             reason,
             permanent ? " -p" : " -t " + duration
         );
+
+        
         
         mc.thePlayer.sendChatMessage(command);
         mc.displayGuiScreen(null);

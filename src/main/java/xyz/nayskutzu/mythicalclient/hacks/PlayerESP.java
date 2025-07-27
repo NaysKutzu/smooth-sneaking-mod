@@ -1,6 +1,7 @@
 package xyz.nayskutzu.mythicalclient.hacks;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -10,6 +11,8 @@ import xyz.nayskutzu.mythicalclient.MythicalClientMod;
 import xyz.nayskutzu.mythicalclient.utils.FriendlyPlayers;
 
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.authlib.GameProfile;
 
 public class PlayerESP {
 
@@ -41,6 +44,12 @@ public class PlayerESP {
             String playerName = player.getName();
             if (playerName != null && !playerName.isEmpty() && !playerName.matches(".*§.*")
                     && !playerName.matches(".*&.*") && !playerName.matches(".*CIT-.*")) {
+                
+                // Additional NPC checks for Hypixel and other servers
+                if (isNPC(playerName, player)) {
+                    continue; // Skip rendering for NPCs
+                }
+                
                 if (FriendlyPlayers.isFriendly(playerName)) {
                     continue; // Skip rendering for friendly players
                 }
@@ -280,4 +289,25 @@ public class PlayerESP {
         GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
         GL11.glEnd();
     }
+
+    public static boolean isNPC(String playerName, EntityPlayer player) {
+        // 1. Check if player is not in the actual world (ghost tab list entry)
+        if (player == null || player.worldObj == null) {
+            return true;
+        }
+    
+        // 2. Check if the entity is not a real player instance (some NPCs are not EntityOtherPlayerMP)
+        if (!(player instanceof EntityOtherPlayerMP)) {
+            return true;
+        }
+    
+        // 3. Heuristic name check (used by plugins like Citizens)
+        if (playerName.startsWith("NPC_") || playerName.startsWith("Citizens")) {
+            return true;
+        }
+    
+        return false; // Probably a real player
+    }
+    
+    
 }
